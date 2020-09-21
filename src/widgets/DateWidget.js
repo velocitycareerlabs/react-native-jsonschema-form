@@ -109,7 +109,6 @@ const DateWidget = (props) => {
           <DateTimePicker
             testID="dateTimePicker"
             value={date}
-            onBlur={() => console.log('onBlur')}
             minimumDate={uiSchema['ui:minDate'] || null}
             maximumDate={uiSchema['ui:maxDate'] || null}
             onChange={onChange}
