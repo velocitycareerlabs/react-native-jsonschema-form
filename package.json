@@ -1,0 +1,63 @@
+{
+  "name": "react-native-web-jsonschema-form",
+  "version": "3.0.6",
+  "private": false,
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist && babel src -d dist && cp package.json dist/package.json && cp README.md dist/README.md",
+    "build:windows": "rmdir /s /q dist && babel src -d dist && xcopy package.json dist\\package.json && xcopy README.md dist/README.md",
+    "lint": "eslint ./src -c ./.eslintrc --ext .js",
+    "cloc:src": "yarn cloc ./src",
+    "cloc:test": "yarn cloc ./__tests__",
+    "cloc:all": "yarn cloc ./"
+  },
+  "author": "Gabriel Marques <gabriel@carelulu.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CareLuLu/react-native-web-jsonschema-form"
+  },
+  "devDependencies": {
+    "@babel/cli": "7.11.6",
+    "@babel/core": "7.11.6",
+    "@babel/plugin-proposal-class-properties": "7.10.4",
+    "@babel/plugin-transform-react-jsx": "7.10.4",
+    "@babel/register": "7.11.5",
+    "babel-eslint": "10.1.0",
+    "babel-plugin-lodash": "3.3.4",
+    "cloc": "2.7.0",
+    "eslint": "7.9.0",
+    "eslint-config-airbnb": "18.2.0",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-json": "2.1.2",
+    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-react": "7.20.6",
+    "eslint-plugin-react-hooks": "4.1.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.11",
+    "prop-types": "^15.6.2",
+    "underscore.string": "^3.3.5"
+  },
+  "peerDependencies": {
+    "react": "^16.8.3",
+    "react-native": "*",
+    "react-native-web-ui-components": "^3.0.0 || ^4.0.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie < 11",
+    "not op_mini all"
+  ],
+  "keywords": [
+    "expo",
+    "react",
+    "react native",
+    "react native web",
+    "react-component",
+    "ui components",
+    "json schema",
+    "react-form"
+  ]
+}
