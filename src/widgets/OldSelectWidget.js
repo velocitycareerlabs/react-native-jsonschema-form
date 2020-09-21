@@ -1,40 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet} from 'react-native';
-import DropDownPicker from 'react-native-dropdown-picker';
 import { isArray, isNaN, without } from 'lodash';
+import Select from 'react-native-web-ui-components/Select';
 import StylePropType from 'react-native-web-ui-components/StylePropType';
-import { useOnChange } from '../utils';
-
-const styles = StyleSheet.create({
-  picker: {
-    width: '100%',
-    height: 40,
-    backgroundColor: 'transparent',
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
-    paddingLeft: 0,
-    marginLeft: 0,
-  },
-  item: {
-    justifyContent: 'flex-start',
-    paddingLeft: 0,
-    marginLeft: 0,
-  },
-  pickerContainer: {
-    flexDirection: 'row',
-    marginBottom: 10,
-  },
-  dropdown: {
-    width: '100%',
-    elevation: 5,
-    backgroundColor: '#FFFFFF',
-  },
-  label: {
-    marginLeft: 0,
-  },
-});
+import { useOnChange, useAutoFocus } from '../utils';
 
 const parser = ({ schema }) => (value) => {
   let parsedValue = value;
@@ -53,10 +22,17 @@ const SelectWidget = (props) => {
   const {
     schema,
     uiSchema,
+    hasError,
+    name,
     value,
-    theme,
+    readonly,
+    disabled,
+    placeholder,
+    auto,
+    style,
   } = props;
 
+  const autoFocusParams = useAutoFocus(props);
   const onChange = useOnChange({ ...props, parser });
 
   let values = uiSchema['ui:enum'] || schema.enum || [];
@@ -65,33 +41,25 @@ const SelectWidget = (props) => {
   }
   const labels = uiSchema['ui:enumNames'] || schema.enumNames || values;
 
-  const onSelect = (item) => {
-    onChange(item.value);
-  };
-
   return (
-      <DropDownPicker
-          items={labels.map(item => ({
-            label: item,
-            value: item
-          }))}
-          defaultValue={value}
-          itemStyle={styles.item}
-          style={styles.picker}
-          containerStyle={styles.pickerContainer}
-          dropDownStyle={styles.dropdown}
-          labelStyle={[theme.input.regular.text, styles.label]}
-          selectedtLabelStyle={styles.label}
-          activeLabelStyle={styles.label}
-          activeItemStyle={styles.label}
-          onChangeItem={onSelect}
-          placeholder=""
-      />
+    <Select
+      {...autoFocusParams}
+      disabled={disabled}
+      readonly={readonly}
+      hasError={hasError}
+      auto={auto}
+      name={name}
+      value={value}
+      values={values}
+      labels={labels}
+      onChange={onChange}
+      placeholder={placeholder}
+      containerStyle={style}
+    />
   );
 };
 
 SelectWidget.propTypes = {
-  theme: PropTypes.shape().isRequired,
   schema: PropTypes.shape().isRequired,
   uiSchema: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
