@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    ["lodash", {
+      "id": [
+        "react-native-web-ui-components",
+        "lodash",
+        "underscore.string",
+      ]
+    }],
+    "@babel/plugin-transform-react-jsx",
+    "@babel/plugin-proposal-class-properties"
+  ]
+}
