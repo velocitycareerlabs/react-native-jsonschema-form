@@ -43,9 +43,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(118, 118, 128, 0.2)',
   },
-  inputText: {
-
-  },
   errorBorder: {
     borderBottomColor: '#FF3825',
   },
@@ -56,6 +53,7 @@ const DateWidget = (props) => {
     uiSchema,
     value,
     hasError,
+    theme,
   } = props;
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
@@ -92,7 +90,7 @@ const DateWidget = (props) => {
           ...(hasError ? styles.errorBorder : {}),
         }}
       >
-        <Text style={styles.inputText}>{formattedValue}</Text>
+        <Text style={theme.input.regular.text}>{formattedValue}</Text>
       </TouchableOpacity>
       {show && (
         <View style={styles.pickerContainer}>
@@ -123,6 +121,7 @@ const DateWidget = (props) => {
 };
 
 DateWidget.propTypes = {
+  theme: PropTypes.shape().isRequired,
   uiSchema: PropTypes.shape().isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
