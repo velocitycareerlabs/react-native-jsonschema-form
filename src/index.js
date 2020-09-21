@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, Platform, Keyboard } from 'react-native';
 import {
@@ -103,6 +103,7 @@ class JsonSchemaForm extends React.Component {
     widgets: PropTypes.shape(),
     filterEmptyValues: PropTypes.bool,
     insideClickRegex: PropTypes.instanceOf(RegExp),
+    customSubmitButton: PropTypes.node,
   };
 
   static defaultProps = {
@@ -128,6 +129,7 @@ class JsonSchemaForm extends React.Component {
     widgets: emptyObject,
     filterEmptyValues: false,
     insideClickRegex: undefined,
+    customSubmitButton: null,
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -464,6 +466,7 @@ class JsonSchemaForm extends React.Component {
       submitButton,
       SubmitButton,
       buttonPosition,
+      customSubmitButton,
     } = this.props;
 
     const { ObjectField } = fields;
@@ -501,12 +504,15 @@ class JsonSchemaForm extends React.Component {
                 text={isString(cancelButton) ? cancelButton : 'Cancel'}
               />
             ) : null}
-            {submitButton ? (
+            {submitButton && !customSubmitButton ? (
               <SubmitButton
                 onPress={this.onSubmit}
                 text={isString(submitButton) ? submitButton : 'Submit'}
               />
             ) : null}
+            {isValidElement(customSubmitButton)
+              ? cloneElement(customSubmitButton, { onPress: this.onSubmit })
+              : null}
           </Row>
         )}
       </React.Fragment>
