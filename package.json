@@ -15,7 +15,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yurakurets/react-native-web-jsonschema-form"
+    "url": "https://github.com/velocitycareerlabs/react-native-jsonschema-form"
   },
   "devDependencies": {
     "@babel/cli": "7.11.6",
