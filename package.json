@@ -1,6 +1,6 @@
 {
   "name": "react-native-jsonschema-web-form",
-  "version": "0.0.52",
+  "version": "0.0.63",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -38,6 +38,7 @@
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "react-native-dropdown-picker": "^3.6.8",
+    "react-native-picker": "^4.3.7",
     "underscore.string": "^3.3.5"
   },
   "peerDependencies": {

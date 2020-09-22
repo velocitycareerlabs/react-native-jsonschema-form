@@ -26,8 +26,6 @@ const styles = StyleSheet.create({
   buttonBlock: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderBottomColor: 'rgba(118, 118, 128, 0.2)',
-    borderBottomWidth: 1,
   },
   buttonTitle: {
     fontSize: 16,
@@ -40,11 +38,6 @@ const styles = StyleSheet.create({
     height: 40,
     paddingVertical: 8,
     paddingRight: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(118, 118, 128, 0.2)',
-  },
-  errorBorder: {
-    borderBottomColor: '#FF3825',
   },
 });
 
@@ -85,16 +78,17 @@ const DateWidget = (props) => {
       <TouchableOpacity
         activeOpacity={1}
         onPress={showPicker}
-        style={{
-          ...styles.inputTextContainer,
-          ...(hasError ? styles.errorBorder : {}),
-        }}
+        style={[
+          styles.inputTextContainer,
+          theme.input.regular.border,
+          hasError ? theme.input.error.border : {},
+        ]}
       >
         <Text style={theme.input.regular.text}>{formattedValue}</Text>
       </TouchableOpacity>
       {show && (
         <View style={styles.pickerContainer}>
-          <View style={styles.buttonBlock}>
+          <View style={[styles.buttonBlock, theme.input.regular.border]}>
             <TouchableOpacity onPress={hidePicker}>
               <Text style={styles.buttonTitle}>
                 Cancel
