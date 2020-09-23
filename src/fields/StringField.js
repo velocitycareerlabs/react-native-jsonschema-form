@@ -12,6 +12,8 @@ class StringField extends AbstractEnumerableField {
     let Widget;
     if (schema.format === 'date-time') {
       Widget = widgets.DateWidget;
+    } else if (schema.format === 'file') {
+      Widget = widgets.FileWidget;
     } else if (password.test(name)) {
       Widget = widgets.PasswordWidget;
     } else if (email.test(name)) {

@@ -65,6 +65,12 @@ Please make sure you have installed `react-native-community/datetimepicker` and 
 yarn add @react-native-community/datetimepicker
 ```
 
+Please make sure you have installed `react-native-image-picker` and its dependencies.
+
+```sh
+yarn add react-native-image-picker
+```
+
 ### Installation
 
 Install the library using `yarn` or `npm`.

@@ -1,6 +1,6 @@
 {
   "name": "react-native-jsonschema-web-form",
-  "version": "0.0.63",
+  "version": "0.0.82",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "react": "^16.8.3",
     "react-native": "*",
     "@react-native-community/datetimepicker": "^3.0.1",
+    "react-native-image-picker": "^2.3.4",
     "react-native-web-ui-components": "^3.0.0 || ^4.0.0"
   },
   "browserslist": [
