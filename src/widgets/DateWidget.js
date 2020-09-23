@@ -1,133 +1,130 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
-import { StyleSheet } from 'react-native';
-import { pick } from 'lodash';
-import Datepicker from 'react-native-web-ui-components/Datepicker';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
-import createDomStyle from 'react-native-web-ui-components/createDomStyle';
+import {
+  StyleSheet, View,
+  Dimensions,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {
   useOnChange,
-  useAutoFocus,
 } from '../utils';
 
 const styles = StyleSheet.create({
-  defaults: {
+  container: {
+    width: '100%',
     marginBottom: 10,
   },
-  fullWidth: {
-    width: '100%',
+  pickerContainer: {
+    // fullscreen picker
+    marginLeft: -32,
+    width: Math.round(Dimensions.get('window').width),
+    backgroundColor: '#fff',
   },
-  auto: {
-    marginBottom: 0,
+  buttonBlock: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  buttonTitle: {
+    fontSize: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  inputTextContainer: {
+    justifyContent: 'flex-end',
+    width: '100%',
+    height: 40,
+    paddingVertical: 8,
+    paddingRight: 12,
   },
 });
-
-const datepickerProps = [
-  'mode',
-  'format',
-  'timeIntervals',
-  'is24Hour',
-];
 
 const DateWidget = (props) => {
   const {
     uiSchema,
-    onChange,
-    name,
     value,
-    placeholder,
-    readonly,
-    disabled,
     hasError,
-    auto,
-    style,
-    showCalendarOnFocus,
-    mode,
-    format,
+    theme,
   } = props;
-
-  const autoFocusParams = useAutoFocus(props);
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
   const onWrappedChange = useOnChange(props);
 
-  let currentFormat = format;
-  if (!currentFormat) {
-    switch (mode) {
-      case 'time': currentFormat = 'h:mma'; break;
-      case 'datetime': currentFormat = 'MM/DD/YYYY h:mma'; break;
-      default: currentFormat = 'MM/DD/YYYY';
-    }
-  }
+  const onChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setDate(currentDate);
+  };
 
-  const css = [styles.defaults];
-  css.push(auto ? styles.auto : styles.fullWidth);
-  css.push(style);
-  const className = `DateWidget__${name.replace(/\./g, '-')}`;
+  const showPicker = () => {
+    setShow(true);
+  };
 
-  let date = value;
-  if (date && date.indexOf('T') >= 0) {
-    date = moment(date).parseZone().format(currentFormat);
-    setTimeout(() => onChange(date, name, {
-      silent: true,
-    }));
-  }
+  const hidePicker = () => {
+    setShow(false);
+  };
+
+  const onConfirm = () => {
+    const dateToSave = moment(new Date(date)).parseZone().format('MM/DD/YYYY');
+    onWrappedChange(dateToSave);
+    setShow(false);
+  };
+
+  const formattedValue = value ? moment(new Date(value)).parseZone().format('MMM YYYY') : '';
 
   return (
-    <Datepicker
-      {...pick(props, datepickerProps)}
-      {...autoFocusParams}
-      disabled={disabled}
-      readonly={readonly}
-      hasError={hasError}
-      name={name}
-      className={className}
-      excludeDates={uiSchema['ui:excludeDates'] || null}
-      minDate={uiSchema['ui:minDate'] || null}
-      maxDate={uiSchema['ui:maxDate'] || null}
-      auto={auto}
-      date={date}
-      onDateChange={onWrappedChange}
-      placeholder={placeholder}
-      style={css}
-      showCalendarOnFocus={showCalendarOnFocus}
-      css={`
-        .react-datepicker__input-container input.${className} {
-          ${createDomStyle(css)}
-        }
-      `}
-      mode={mode}
-      format={currentFormat}
-    />
+    <View style={styles.container}>
+      <TouchableOpacity
+        activeOpacity={1}
+        onPress={showPicker}
+        style={[
+          styles.inputTextContainer,
+          theme.input.regular.border,
+          hasError ? theme.input.error.border : {},
+        ]}
+      >
+        <Text style={theme.input.regular.text}>{formattedValue}</Text>
+      </TouchableOpacity>
+      {show && (
+        <View style={styles.pickerContainer}>
+          <View style={[styles.buttonBlock, theme.input.regular.border]}>
+            <TouchableOpacity onPress={hidePicker}>
+              <Text style={styles.buttonTitle}>
+                Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={onConfirm}>
+              <Text style={styles.buttonTitle}>
+                Ok
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            minimumDate={uiSchema['ui:minDate'] || null}
+            maximumDate={uiSchema['ui:maxDate'] || null}
+            onChange={onChange}
+          />
+        </View>
+      )}
+    </View>
   );
 };
 
 DateWidget.propTypes = {
+  theme: PropTypes.shape().isRequired,
   uiSchema: PropTypes.shape().isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  placeholder: PropTypes.string,
-  readonly: PropTypes.bool,
-  disabled: PropTypes.bool,
   hasError: PropTypes.bool,
-  auto: PropTypes.bool,
-  style: StylePropType,
-  showCalendarOnFocus: PropTypes.bool,
-  mode: PropTypes.oneOf(['date', 'datetime', 'time']),
-  format: PropTypes.string,
 };
 
 DateWidget.defaultProps = {
   value: '',
-  placeholder: '',
-  readonly: false,
-  disabled: false,
   hasError: false,
-  auto: false,
-  style: null,
-  showCalendarOnFocus: true,
-  mode: 'date',
-  format: null,
 };
 
 export default DateWidget;

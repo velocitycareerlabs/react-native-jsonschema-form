@@ -1,9 +1,55 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import Icon from 'react-native-web-ui-components/Icon';
+import {StyleSheet, Platform, Text, TouchableOpacity} from 'react-native';
+import Picker from 'react-native-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { isArray, isNaN, without } from 'lodash';
-import Select from 'react-native-web-ui-components/Select';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
-import { useOnChange, useAutoFocus } from '../utils';
+import { useOnChange } from '../utils';
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    height: 40,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 0.5,
+    marginBottom: 10,
+  },
+  picker: {
+    width: '100%',
+    height: 40,
+    backgroundColor: 'transparent',
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    paddingLeft: 0,
+    marginLeft: 0,
+  },
+  item: {
+    justifyContent: 'flex-start',
+    paddingLeft: 0,
+    marginLeft: 0,
+  },
+  pickerContainer: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  dropdown: {
+    width: '100%',
+    elevation: 5,
+    backgroundColor: '#FFFFFF',
+  },
+  label: {
+    marginLeft: 0,
+  },
+  icon: {
+    fontSize: 12,
+    fontWeight: '400',
+    color: '#697079'
+  },
+});
 
 const parser = ({ schema }) => (value) => {
   let parsedValue = value;
@@ -22,17 +68,15 @@ const SelectWidget = (props) => {
   const {
     schema,
     uiSchema,
-    hasError,
-    name,
     value,
-    readonly,
-    disabled,
-    placeholder,
-    auto,
-    style,
+    theme,
+    hasError,
   } = props;
 
-  const autoFocusParams = useAutoFocus(props);
+  useEffect(() => {
+    return () => Picker.hide();
+  }, []);
+
   const onChange = useOnChange({ ...props, parser });
 
   let values = uiSchema['ui:enum'] || schema.enum || [];
@@ -41,44 +85,82 @@ const SelectWidget = (props) => {
   }
   const labels = uiSchema['ui:enumNames'] || schema.enumNames || values;
 
-  return (
-    <Select
-      {...autoFocusParams}
-      disabled={disabled}
-      readonly={readonly}
-      hasError={hasError}
-      auto={auto}
-      name={name}
-      value={value}
-      values={values}
-      labels={labels}
-      onChange={onChange}
-      placeholder={placeholder}
-      containerStyle={style}
-    />
-  );
+  const onTogglePicker = () => {
+    Picker.isPickerShow(status => {
+      if (status) {
+        Picker.hide();
+      } else {
+        Picker.init({
+          pickerData: labels,
+          selectedValue: [value || labels[0]],
+          pickerCancelBtnText: '',
+          pickerConfirmBtnText: 'Done',
+          pickerConfirmBtnColor: [0, 122, 255, 1],
+          pickerTitleText: '',
+          pickerRowHeight: 40,
+          onPickerConfirm,
+        });
+
+        Picker.show();
+      }
+    });
+  };
+
+  const onPickerConfirm = val => {
+    onChange(val[0]);
+  };
+
+  const onSelect = (item) => {
+    onChange(item.value);
+  };
+
+  return Platform.OS === 'ios' ?
+      (
+          <TouchableOpacity
+              style={[
+                styles.container,
+                theme.input.regular.border,
+                hasError ? theme.input.error.border : {}
+              ]}
+              onPress={onTogglePicker}
+              activeOpacity={0.7}>
+            <Text style={theme.input.regular.text}>
+              {value}
+            </Text>
+            <Icon style={styles.icon} name="chevron-down" />
+          </TouchableOpacity>
+      ) :
+      (
+          <DropDownPicker
+            items={labels.map(item => ({
+              label: item,
+              value: item
+            }))}
+            defaultValue={value}
+            itemStyle={styles.item}
+            style={[styles.picker, hasError ? theme.input.error.border : {}]}
+            containerStyle={styles.pickerContainer}
+            dropDownStyle={styles.dropdown}
+            labelStyle={[theme.input.regular.text, styles.label]}
+            selectedtLabelStyle={styles.label}
+            activeLabelStyle={styles.label}
+            activeItemStyle={styles.label}
+            onChangeItem={onSelect}
+            placeholder=""
+        />
+    );
 };
 
 SelectWidget.propTypes = {
+  theme: PropTypes.shape().isRequired,
   schema: PropTypes.shape().isRequired,
   uiSchema: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
-  placeholder: PropTypes.string,
-  readonly: PropTypes.bool,
-  disabled: PropTypes.bool,
-  auto: PropTypes.bool,
-  style: StylePropType,
   value: PropTypes.any, // eslint-disable-line
 };
 
 SelectWidget.defaultProps = {
   value: '',
-  placeholder: '',
-  readonly: false,
-  disabled: false,
-  auto: false,
-  style: null,
 };
 
 export default SelectWidget;

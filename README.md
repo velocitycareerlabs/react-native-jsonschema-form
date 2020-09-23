@@ -59,6 +59,12 @@ This library is backed by [react-native-web-ui-components](https://www.npmjs.com
 yarn add react-native-web-ui-components
 ```
 
+Please make sure you have installed `react-native-community/datetimepicker` and its dependencies.
+
+```sh
+yarn add @react-native-community/datetimepicker
+```
+
 ### Installation
 
 Install the library using `yarn` or `npm`.
