@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
+  Keyboard,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
@@ -58,6 +59,7 @@ const DateWidget = (props) => {
   };
 
   const showPicker = () => {
+    Keyboard.dismiss();
     setShow(true);
   };
 
