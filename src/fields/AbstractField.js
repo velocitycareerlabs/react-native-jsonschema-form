@@ -26,9 +26,20 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
   },
+  containerWithLabel: {
+    height: 60,
+  },
 });
 
 class AbstractField extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      inFocus: false
+    };
+  }
+
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -57,9 +68,10 @@ class AbstractField extends React.Component {
     zIndex: 0,
   };
 
-  shouldComponentUpdate(nextProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     const { clearCache, update, name } = nextProps;
-    return name === '' || clearCache || update === 'all' || update[name] || false;
+    const { inFocus } = nextState;
+    return name === '' || clearCache || update === 'all' || update[name] || inFocus !== this.state.inFocus || false;
   }
 
   getDefaultWidget() { // eslint-disable-line
@@ -97,6 +109,10 @@ class AbstractField extends React.Component {
       noTitle,
       required,
     } = this.props;
+    const { inFocus } = this.state;
+    if (!inFocus && !params.value) {
+      return null;
+    }
     const hasTitle = !(
       noTitle
       || uiSchema['ui:title'] === false
@@ -126,6 +142,43 @@ class AbstractField extends React.Component {
     );
   }
 
+  getPlaceholder(params) {
+    const {
+      name,
+      schema,
+      uiSchema,
+      noTitle,
+      required,
+      value,
+    } = this.props;
+    const { inFocus } = this.state;
+    if (inFocus || value) {
+      return '';
+    }
+    const hasTitle = !(
+        noTitle
+        || uiSchema['ui:title'] === false
+        || schema.type === 'object'
+        || this.cache === ArrayWidget
+    );
+    if (!uiSchema['ui:toggleable'] && !hasTitle) {
+      return '';
+    }
+    let title = getTitle(uiSchema['ui:title'] || FIELD_TITLE, params);
+    if (required[toPath(name, '[]')]) {
+      title += '*';
+    }
+    return title;
+  }
+
+  onFocus = () => {
+    this.setState({inFocus: true});
+  };
+
+  onBlur = () => {
+    this.setState({inFocus: false});
+  };
+
   render() {
     const {
       id,
@@ -140,6 +193,7 @@ class AbstractField extends React.Component {
       zIndex,
       clearCache,
     } = this.props;
+    const { inFocus } = this.state;
 
     if (clearCache) {
       this.cache = null;
@@ -188,7 +242,7 @@ class AbstractField extends React.Component {
       name,
       value,
     };
-    const placeholder = getTitle(uiSchema['ui:placeholder'] || '', params);
+    const placeholder = this.getPlaceholder(params);
     const fieldClassName = schema.type !== 'object' && Widget !== ArrayWidget
       ? `${id}-field ${id}-field-${name.replace(/\./g, '-')}`
       : '';
@@ -209,12 +263,14 @@ class AbstractField extends React.Component {
           <React.Fragment>
             <Widget
               {...this.props}
-              style={null}
+              style={!inFocus && !value ? styles.containerWithLabel : null}
               auto={uiSchema['ui:inline']}
               hasError={hasError}
               placeholder={placeholder}
               disabled={!!(meta && meta['ui:disabled'])}
               readonly={!!uiSchema['ui:readonly']}
+              onFocus={this.onFocus}
+              onBlur={this.onBlur}
               {...(uiSchema['ui:widgetProps'] || {})}
             />
             {hasError ? this.renderErrors() : null}
