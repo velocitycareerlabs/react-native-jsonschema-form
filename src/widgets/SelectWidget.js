@@ -1,10 +1,11 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-web-ui-components/Icon';
+import StylePropType from 'react-native-web-ui-components/StylePropType';
 import {StyleSheet, Platform, Text, TouchableOpacity} from 'react-native';
 import Picker from 'react-native-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { isArray, isNaN, without } from 'lodash';
+import {isArray, isNaN, noop, without} from 'lodash';
 import { useOnChange } from '../utils';
 
 const styles = StyleSheet.create({
@@ -71,6 +72,10 @@ const SelectWidget = (props) => {
     value,
     theme,
     hasError,
+    style,
+    placeholder,
+    onFocus,
+    onBlur,
   } = props;
 
   useEffect(() => {
@@ -99,14 +104,22 @@ const SelectWidget = (props) => {
           pickerTitleText: '',
           pickerRowHeight: 40,
           onPickerConfirm,
+          onPickerSelect
         });
 
         Picker.show();
+        onFocus && onFocus();
+        onChange(value || labels[0]);
       }
     });
   };
 
   const onPickerConfirm = val => {
+    onChange(val[0]);
+    onBlur && onBlur();
+  };
+
+  const onPickerSelect = val => {
     onChange(val[0]);
   };
 
@@ -114,19 +127,30 @@ const SelectWidget = (props) => {
     onChange(item.value);
   };
 
+  const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
+
   return Platform.OS === 'ios' ?
       (
           <TouchableOpacity
               style={[
                 styles.container,
                 theme.input.regular.border,
-                hasError ? theme.input.error.border : {}
+                hasError ? theme.input.error.border : {},
+                style,
               ]}
               onPress={onTogglePicker}
               activeOpacity={0.7}>
-            <Text style={theme.input.regular.text}>
-              {value}
-            </Text>
+            {placeholder ?
+                (
+                    <Text style={[theme.input.regular.text, placeholderStyle]}>
+                      {placeholder}
+                    </Text>
+                ) :
+                (
+                    <Text style={theme.input.regular.text}>
+                      {value}
+                    </Text>
+                )}
             <Icon style={styles.icon} name="chevron-down" />
           </TouchableOpacity>
       ) :
@@ -138,15 +162,16 @@ const SelectWidget = (props) => {
             }))}
             defaultValue={value}
             itemStyle={styles.item}
-            style={[styles.picker, hasError ? theme.input.error.border : {}]}
+            style={[styles.picker, hasError ? theme.input.error.border : {}, style]}
             containerStyle={styles.pickerContainer}
             dropDownStyle={styles.dropdown}
             labelStyle={[theme.input.regular.text, styles.label]}
+            placeholderStyle={placeholderStyle}
             selectedtLabelStyle={styles.label}
             activeLabelStyle={styles.label}
             activeItemStyle={styles.label}
             onChangeItem={onSelect}
-            placeholder=""
+            placeholder={placeholder}
         />
     );
 };
@@ -157,10 +182,18 @@ SelectWidget.propTypes = {
   uiSchema: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
   value: PropTypes.any, // eslint-disable-line
+  style: StylePropType,
+  placeholder: PropTypes.string,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
 };
 
 SelectWidget.defaultProps = {
   value: '',
+  placeholder: '',
+  style: {},
+  onBlur: noop,
+  onFocus: noop,
 };
 
 export default SelectWidget;

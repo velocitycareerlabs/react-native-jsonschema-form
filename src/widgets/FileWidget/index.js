@@ -1,20 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import StylePropType from 'react-native-web-ui-components/StylePropType';
 import Icon from 'react-native-web-ui-components/Icon';
-import { StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 
 const styles = StyleSheet.create({
   inputTextContainer: {
-    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     width: '100%',
     minHeight: 40,
     paddingVertical: 8,
     paddingRight: 12,
     marginBottom: 10,
   },
-  emptyContainer: {
-    alignItems: 'flex-end',
+  withPlaceholder: {
+    justifyContent: 'space-between'
   },
   image: {
     width: 88,
@@ -34,6 +37,8 @@ const FileWidget = (props) => {
     value,
     onChange,
     name,
+    style,
+    placeholder,
   } = props;
 
   const options = {
@@ -44,7 +49,9 @@ const FileWidget = (props) => {
 
   const showPicker = () => {
     ImagePicker.showImagePicker(options, (response) => {
-      if (response.error) {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
         console.log('ImagePicker Error: ', response.error);
       } else {
         // You can also display the image using data:
@@ -53,6 +60,7 @@ const FileWidget = (props) => {
       }
     });
   };
+  const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
 
   return (
       <TouchableOpacity
@@ -62,9 +70,17 @@ const FileWidget = (props) => {
             styles.inputTextContainer,
             theme.input.regular.border,
             hasError ? theme.input.error.border : {},
-            !value ? styles.emptyContainer : {}
+            style,
+            placeholder ? styles.withPlaceholder : {}
           ]}
       >
+        {placeholder ?
+            (
+                <Text style={[theme.input.regular.text, placeholderStyle]}>
+                  {placeholder}
+                </Text>
+            ) :
+            null}
         {value ? <Image style={styles.image} source={{uri: value}} /> :
             <Icon style={styles.icon} name="plus-circle" />
         }
@@ -76,6 +92,13 @@ FileWidget.propTypes = {
   name: PropTypes.string.isRequired,
   theme: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
+  style: StylePropType,
+  placeholder: PropTypes.string,
+};
+
+FileWidget.defaultProps = {
+  placeholder: '',
+  style: {},
 };
 
 export default FileWidget;

@@ -9,9 +9,11 @@ import {
   Keyboard,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import StylePropType from 'react-native-web-ui-components/StylePropType';
 import {
   useOnChange,
 } from '../utils';
+import {noop} from "lodash";
 
 const styles = StyleSheet.create({
   container: {
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   inputTextContainer: {
-    justifyContent: 'flex-end',
+    justifyContent: 'center',
     width: '100%',
     height: 40,
     paddingVertical: 8,
@@ -48,6 +50,10 @@ const DateWidget = (props) => {
     value,
     hasError,
     theme,
+    style,
+    placeholder,
+    onFocus,
+    onBlur,
   } = props;
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
@@ -55,16 +61,20 @@ const DateWidget = (props) => {
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
+    const dateToSave = moment(new Date(currentDate)).parseZone().format('MM/DD/YYYY');
     setDate(currentDate);
+    onWrappedChange(dateToSave);
   };
 
   const showPicker = () => {
     Keyboard.dismiss();
     setShow(true);
+    onFocus && onFocus();
   };
 
   const hidePicker = () => {
     setShow(false);
+    onBlur && onBlur();
   };
 
   const onConfirm = () => {
@@ -73,7 +83,10 @@ const DateWidget = (props) => {
     setShow(false);
   };
 
-  const formattedValue = value ? moment(new Date(value)).parseZone().format('MMM YYYY') : '';
+  const formattedValue = (value || date) ?
+      moment(new Date(value || date)).parseZone().format('MMM YYYY') :
+      '';
+  const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
 
   return (
     <View style={styles.container}>
@@ -84,9 +97,13 @@ const DateWidget = (props) => {
           styles.inputTextContainer,
           theme.input.regular.border,
           hasError ? theme.input.error.border : {},
+          style,
         ]}
       >
-        <Text style={theme.input.regular.text}>{formattedValue}</Text>
+        {placeholder ?
+            <Text style={[theme.input.regular.text, placeholderStyle]}>{placeholder}</Text> :
+            <Text style={theme.input.regular.text}>{formattedValue}</Text>
+        }
       </TouchableOpacity>
       {show && (
         <View style={styles.pickerContainer}>
@@ -122,11 +139,19 @@ DateWidget.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   hasError: PropTypes.bool,
+  style: StylePropType,
+  placeholder: PropTypes.string,
+  onBlur: PropTypes.func,
+  onFocus: PropTypes.func,
 };
 
 DateWidget.defaultProps = {
   value: '',
+  placeholder: '',
   hasError: false,
+  style: {},
+  onBlur: noop,
+  onFocus: noop,
 };
 
 export default DateWidget;
