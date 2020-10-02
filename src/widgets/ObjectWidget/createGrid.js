@@ -79,6 +79,10 @@ const createProperty = (property, gridItem, index, params) => {
     PropertyContainer = React.Fragment;
     propertyContainerProps = {};
   }
+  const onFocus = () => {
+    params.onFocus && params.onFocus(propertyName);
+  };
+
   const Property = ({
     value,
     meta,
@@ -93,6 +97,7 @@ const createProperty = (property, gridItem, index, params) => {
         meta={(meta && meta[property]) || getMeta(propertySchema)}
         errors={errors && errors[property]}
         name={propertyName}
+        onFocus={onFocus}
         schema={propertySchema}
         uiSchema={uiSchema[property]}
         gridItemType={gridItem.type}
@@ -181,12 +186,16 @@ const createGridItem = (props) => {
 };
 
 const createGrid = (grid, params) => {
+  const onFocus = (name) => {
+    params.setField(name);
+  };
+
   const items = grid.map((gridItem, i) => createGridItem({
-    params,
+    params: {...params, onFocus},
     gridItem,
     first: i === 0,
     zIndex: grid.length - i,
-    key: `${params.name}-${i}`,
+    key: `${params.name}-${i}`
   }));
   return (props) => {
     const currentStyle = props.style; // eslint-disable-line

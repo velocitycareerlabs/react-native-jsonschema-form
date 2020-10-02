@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   },
   buttonBlock: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end',
   },
   buttonTitle: {
     fontSize: 16,
@@ -54,10 +54,18 @@ const DateWidget = (props) => {
     placeholder,
     onFocus,
     onBlur,
+    activeField,
+    name,
   } = props;
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const onWrappedChange = useOnChange(props);
+
+  useEffect(() => {
+    if (activeField && activeField !== name) {
+      setShow(false);
+    }
+  }, [activeField]);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -66,21 +74,23 @@ const DateWidget = (props) => {
     onWrappedChange(dateToSave);
   };
 
-  const showPicker = () => {
-    Keyboard.dismiss();
-    setShow(true);
-    onFocus && onFocus();
+  const togglePicker = () => {
+    setShow(!show);
+    if (show) {
+      const dateToSave = moment(new Date(date)).parseZone().format('MM/DD/YYYY');
+      onWrappedChange(dateToSave);
+      onBlur && onBlur();
+    } else {
+      Keyboard.dismiss();
+      onFocus && onFocus();
+    }
   };
 
   const hidePicker = () => {
     setShow(false);
+    setDate(new Date());
+    onWrappedChange('');
     onBlur && onBlur();
-  };
-
-  const onConfirm = () => {
-    const dateToSave = moment(new Date(date)).parseZone().format('MM/DD/YYYY');
-    onWrappedChange(dateToSave);
-    setShow(false);
   };
 
   const formattedValue = (value || date) ?
@@ -92,7 +102,7 @@ const DateWidget = (props) => {
     <View style={styles.container}>
       <TouchableOpacity
         activeOpacity={1}
-        onPress={showPicker}
+        onPress={togglePicker}
         style={[
           styles.inputTextContainer,
           theme.input.regular.border,
@@ -111,11 +121,6 @@ const DateWidget = (props) => {
             <TouchableOpacity onPress={hidePicker}>
               <Text style={styles.buttonTitle}>
                 Cancel
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={onConfirm}>
-              <Text style={styles.buttonTitle}>
-                Ok
               </Text>
             </TouchableOpacity>
           </View>
@@ -143,6 +148,7 @@ DateWidget.propTypes = {
   placeholder: PropTypes.string,
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,
+  activeField: PropTypes.string.isRequired
 };
 
 DateWidget.defaultProps = {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { last, isArray, isString } from 'lodash';
+import {last, isArray, isString, noop} from 'lodash';
 import Row from 'react-native-web-ui-components/Row';
 import View from 'react-native-web-ui-components/View';
 import {
@@ -58,6 +58,8 @@ class AbstractField extends React.Component {
     meta: PropTypes.any, // eslint-disable-line
     errors: PropTypes.any, // eslint-disable-line
     value: PropTypes.any, // eslint-disable-line
+    onFocus: PropTypes.func,
+    activeField: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -66,12 +68,21 @@ class AbstractField extends React.Component {
     errors: {},
     value: undefined,
     zIndex: 0,
+    onFocus: noop,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { clearCache, update, name } = nextProps;
+    const { clearCache, update, name, activeField } = nextProps;
     const { inFocus } = nextState;
-    return name === '' || clearCache || update === 'all' || update[name] || inFocus !== this.state.inFocus || false;
+    return (
+        name === '' ||
+        clearCache ||
+        update === 'all' ||
+        update[name] ||
+        inFocus !== this.state.inFocus ||
+        this.props.activeField !== activeField ||
+        false
+    );
   }
 
   getDefaultWidget() { // eslint-disable-line
@@ -172,6 +183,8 @@ class AbstractField extends React.Component {
   }
 
   onFocus = () => {
+    const {onFocus} = this.props;
+    onFocus && onFocus();
     this.setState({inFocus: true});
   };
 
@@ -272,6 +285,7 @@ class AbstractField extends React.Component {
               onFocus={this.onFocus}
               onBlur={this.onBlur}
               {...(uiSchema['ui:widgetProps'] || {})}
+              activeField={this.props.activeField}
             />
             {hasError ? this.renderErrors() : null}
           </React.Fragment>
