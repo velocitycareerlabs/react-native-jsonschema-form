@@ -107,7 +107,7 @@ class AbstractField extends React.Component {
     const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
     const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
 
-    return errors.filter(error => isString(error)).map((error, i) => (
+    return errors.filter(isString).map((error, i) => (
       <ErrorWidget
         uiSchema={uiSchema}
         key={error}
