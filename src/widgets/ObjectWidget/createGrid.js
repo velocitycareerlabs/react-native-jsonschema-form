@@ -97,7 +97,10 @@ const createProperty = (property, gridItem, index, params) => {
     propertyContainerProps = {};
   }
   const onFocus = () => {
-    params.onFocus && params.onFocus(propertyName);
+    const {onFocus} = params;
+    if (onFocus) {
+      onFocus(propertyName);
+    }
   };
 
   const withoutPadding = propertySchema.format === 'date-time' ||

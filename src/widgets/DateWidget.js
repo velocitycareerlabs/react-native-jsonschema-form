@@ -81,7 +81,9 @@ const DateWidget = (props) => {
     const currentDate = value || date;
     const dateToSave = currentDate && moment(new Date(currentDate)).parseZone().format('MM/DD/YYYY');
     onWrappedChange(dateToSave);
-    onBlur && onBlur();
+    if (onBlur) {
+      onBlur();
+    }
   };
 
   useEffect(() => {
@@ -105,7 +107,9 @@ const DateWidget = (props) => {
     } else {
       Keyboard.dismiss();
       setDate(new Date());
-      onFocus && onFocus();
+      if (onFocus) {
+        onFocus();
+      }
     }
   };
 
@@ -113,7 +117,9 @@ const DateWidget = (props) => {
     setShow(false);
     setDate('');
     onWrappedChange('');
-    onBlur && onBlur();
+    if (onBlur) {
+      onBlur();
+    }
   };
 
   const formattedValue = (value || date) ?

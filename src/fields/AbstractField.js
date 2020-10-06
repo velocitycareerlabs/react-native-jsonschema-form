@@ -100,16 +100,14 @@ class AbstractField extends React.Component {
   }
 
   renderErrors() {
-    let { errors, schema } = this.props;
-    const { widgets, uiSchema } = this.props;
+    const { widgets, uiSchema, errors, schema } = this.props;
 
     const { ErrorWidget } = widgets;
     const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
     const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
     const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
 
-    errors = errors.filter(error => isString(error));
-    return errors.map((error, i) => (
+    return errors.filter(error => isString(error)).map((error, i) => (
       <ErrorWidget
         uiSchema={uiSchema}
         key={error}
@@ -203,12 +201,14 @@ class AbstractField extends React.Component {
 
   onFocus = () => {
     const {onFocus} = this.props;
-    onFocus && onFocus();
-    this.setState({inFocus: true});
+    if (onFocus) {
+      onFocus();
+    }
+    this.setState(() => ({inFocus: true}));
   };
 
   onBlur = () => {
-    this.setState({inFocus: false});
+    this.setState(() => ({inFocus: false}));
   };
 
   render() {

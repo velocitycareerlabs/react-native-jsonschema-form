@@ -320,7 +320,7 @@ class JsonSchemaForm extends React.Component {
   };
 
   onSubmit = () => {
-    this.setState({activeField: ''});
+    this.setState(() => ({activeField: ''}));
     if (Platform.OS !== 'web') {
       Keyboard.dismiss();
     }
@@ -449,7 +449,7 @@ class JsonSchemaForm extends React.Component {
   }
 
   setField = (name) => {
-    this.setState({activeField: name});
+    this.setState(() => ({activeField: name}));
   };
 
   render() {
