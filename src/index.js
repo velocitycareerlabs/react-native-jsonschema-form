@@ -320,6 +320,7 @@ class JsonSchemaForm extends React.Component {
   };
 
   onSubmit = () => {
+    this.setState({activeField: ''});
     if (Platform.OS !== 'web') {
       Keyboard.dismiss();
     }

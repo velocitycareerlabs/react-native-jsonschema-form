@@ -29,6 +29,16 @@ const styles = StyleSheet.create({
   containerWithLabel: {
     height: 60,
   },
+  leftRow: {
+    paddingRight: 8,
+    paddingLeft: 32
+  },
+  rightRow: {
+    paddingLeft: 8,
+  },
+  fullRow: {
+    paddingHorizontal: 32
+  }
 });
 
 class AbstractField extends React.Component {
@@ -90,10 +100,13 @@ class AbstractField extends React.Component {
   }
 
   renderErrors() {
-    let { errors } = this.props;
+    let { errors, schema } = this.props;
     const { widgets, uiSchema } = this.props;
 
     const { ErrorWidget } = widgets;
+    const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
+    const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
+    const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
 
     errors = errors.filter(error => isString(error));
     return errors.map((error, i) => (
@@ -103,6 +116,7 @@ class AbstractField extends React.Component {
         first={i === 0}
         last={i === errors.length - 1}
         auto={uiSchema['ui:inline']}
+        style={{...leftRow, ...rightRow, ...fullRow}}
         {...(uiSchema['ui:errorProps'] || {})}
       >
         {error}
@@ -138,6 +152,10 @@ class AbstractField extends React.Component {
     if (required[toPath(name, '[]')]) {
       title += '*';
     }
+    const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
+    const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
+    const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
+
     return (
       <LabelWidget
         {...this.props}
@@ -146,6 +164,7 @@ class AbstractField extends React.Component {
         hasTitle={hasTitle}
         hasError={hasError}
         auto={uiSchema['ui:inline']}
+        style={{...leftRow, ...rightRow, ...fullRow}}
         {...(uiSchema['ui:titleProps'] || {})}
       >
         {title}
@@ -205,6 +224,7 @@ class AbstractField extends React.Component {
       titleOnly,
       zIndex,
       clearCache,
+      activeField,
     } = this.props;
     const { inFocus } = this.state;
 
@@ -284,8 +304,11 @@ class AbstractField extends React.Component {
               readonly={!!uiSchema['ui:readonly']}
               onFocus={this.onFocus}
               onBlur={this.onBlur}
+              rightRow={uiSchema['ui:rightRow']}
+              leftRow={uiSchema['ui:leftRow']}
               {...(uiSchema['ui:widgetProps'] || {})}
-              activeField={this.props.activeField}
+              activeField={activeField}
+              inFocus={activeField === name && inFocus}
             />
             {hasError ? this.renderErrors() : null}
           </React.Fragment>

@@ -12,8 +12,9 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import StylePropType from 'react-native-web-ui-components/StylePropType';
 import {
   useOnChange,
+  usePrevious
 } from '../utils';
-import {noop} from "lodash";
+import {noop, get} from "lodash";
 
 const styles = StyleSheet.create({
   container: {
@@ -21,8 +22,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   pickerContainer: {
-    // fullscreen picker
-    marginLeft: -32,
     width: Math.round(Dimensions.get('window').width),
     backgroundColor: '#fff',
   },
@@ -35,13 +34,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  inputTextContainer: {
+  rightPicker: {
+    marginLeft: '-100%'
+  },
+  inputContainer: {
     justifyContent: 'center',
     width: '100%',
     height: 40,
-    paddingVertical: 8,
-    paddingRight: 12,
+    paddingVertical: 8
   },
+  leftRow: {
+    paddingRight: 8,
+    paddingLeft: 32
+  },
+  rightRow: {
+    paddingLeft: 8,
+    paddingRight: 32
+  },
+  fullRow: {
+    paddingHorizontal: 32
+  }
 });
 
 const DateWidget = (props) => {
@@ -56,16 +68,28 @@ const DateWidget = (props) => {
     onBlur,
     activeField,
     name,
+    inFocus,
+    rightRow,
+    leftRow
   } = props;
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const onWrappedChange = useOnChange(props);
+  const prevActiveField = usePrevious(activeField);
+
+  const hidePicker = () => {
+    const currentDate = value || date;
+    const dateToSave = currentDate && moment(new Date(currentDate)).parseZone().format('MM/DD/YYYY');
+    onWrappedChange(dateToSave);
+    onBlur && onBlur();
+  };
 
   useEffect(() => {
-    if (activeField && activeField !== name) {
+    if (activeField !== name && prevActiveField === name) {
       setShow(false);
+      hidePicker();
     }
-  }, [activeField]);
+  }, [activeField, prevActiveField, name]);
 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -77,18 +101,17 @@ const DateWidget = (props) => {
   const togglePicker = () => {
     setShow(!show);
     if (show) {
-      const dateToSave = moment(new Date(date)).parseZone().format('MM/DD/YYYY');
-      onWrappedChange(dateToSave);
-      onBlur && onBlur();
+      hidePicker();
     } else {
       Keyboard.dismiss();
+      setDate(new Date());
       onFocus && onFocus();
     }
   };
 
-  const hidePicker = () => {
+  const onCancel = () => {
     setShow(false);
-    setDate(new Date());
+    setDate('');
     onWrappedChange('');
     onBlur && onBlur();
   };
@@ -97,6 +120,8 @@ const DateWidget = (props) => {
       moment(new Date(value || date)).parseZone().format('MMM YYYY') :
       '';
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
+  const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
+  const rightPicker = rightRow ? styles.rightPicker : {};
 
   return (
     <View style={styles.container}>
@@ -104,21 +129,28 @@ const DateWidget = (props) => {
         activeOpacity={1}
         onPress={togglePicker}
         style={[
-          styles.inputTextContainer,
-          theme.input.regular.border,
-          hasError ? theme.input.error.border : {},
-          style,
+          rightRow ? styles.rightRow : styles.fullRow,
+          leftRow ? styles.leftRow : {}
         ]}
       >
-        {placeholder ?
-            <Text style={[theme.input.regular.text, placeholderStyle]}>{placeholder}</Text> :
-            <Text style={theme.input.regular.text}>{formattedValue}</Text>
-        }
+        <View
+            style={[
+                theme.input.regular.border,
+                hasError ? theme.input.error.border : {},
+                styles.inputContainer,
+                style
+            ]}
+        >
+          {placeholder ?
+              <Text style={[theme.input.regular.text, placeholderStyle]}>{placeholder}</Text> :
+              <Text style={[theme.input.regular.text, textStyle]}>{formattedValue}</Text>
+          }
+        </View>
       </TouchableOpacity>
       {show && (
-        <View style={styles.pickerContainer}>
+        <View style={[styles.pickerContainer, rightPicker]}>
           <View style={[styles.buttonBlock, theme.input.regular.border]}>
-            <TouchableOpacity onPress={hidePicker}>
+            <TouchableOpacity onPress={onCancel}>
               <Text style={styles.buttonTitle}>
                 Cancel
               </Text>
@@ -126,7 +158,7 @@ const DateWidget = (props) => {
           </View>
           <DateTimePicker
             testID="dateTimePicker"
-            value={date}
+            value={new Date(value || date)}
             minimumDate={uiSchema['ui:minDate'] || null}
             maximumDate={uiSchema['ui:maxDate'] || null}
             onChange={onChange}
@@ -148,13 +180,18 @@ DateWidget.propTypes = {
   placeholder: PropTypes.string,
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,
-  activeField: PropTypes.string.isRequired
+  activeField: PropTypes.string.isRequired,
+  inFocus: PropTypes.bool.isRequired,
+  rightRow: PropTypes.bool,
+  leftRow: PropTypes.bool
 };
 
 DateWidget.defaultProps = {
   value: '',
   placeholder: '',
   hasError: false,
+  rightRow: false,
+  leftRow: false,
   style: {},
   onBlur: noop,
   onFocus: noop,
