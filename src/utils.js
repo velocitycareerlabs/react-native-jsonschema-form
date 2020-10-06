@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   has,
   get,
@@ -450,6 +450,16 @@ export const normalized = (value) => {
 };
 
 export const isEmpty = value => (value === '' || value === null || value === undefined);
+
+export const usePrevious = (value) => {
+  const ref = useRef();
+
+  useEffect(() => {
+  ref.current = value;
+}, [value]);
+
+  return ref.current;
+};
 
 export const viewStyleKeys = [
   'animationDelay',

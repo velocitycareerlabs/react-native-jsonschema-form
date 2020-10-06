@@ -228,6 +228,7 @@ class JsonSchemaForm extends React.Component {
       metaSchemaProp: metaSchema,
       update: {},
       clearCache: false,
+      activeField: ''
     };
 
     onRef(this);
@@ -319,6 +320,7 @@ class JsonSchemaForm extends React.Component {
   };
 
   onSubmit = () => {
+    this.setState(() => ({activeField: ''}));
     if (Platform.OS !== 'web') {
       Keyboard.dismiss();
     }
@@ -446,6 +448,10 @@ class JsonSchemaForm extends React.Component {
     return filteredValues;
   }
 
+  setField = (name) => {
+    this.setState(() => ({activeField: name}));
+  };
+
   render() {
     const {
       event,
@@ -457,6 +463,7 @@ class JsonSchemaForm extends React.Component {
       update,
       required,
       clearCache,
+      activeField,
     } = this.state;
 
     const {
@@ -470,7 +477,6 @@ class JsonSchemaForm extends React.Component {
     } = this.props;
 
     const { ObjectField } = fields;
-
     return (
       <React.Fragment>
         <Row className={`Form ${this.id}`} style={styles.form}>
@@ -494,6 +500,8 @@ class JsonSchemaForm extends React.Component {
             onSubmit={this.onSubmit}
             renderId={Math.random()}
             clearCache={clearCache}
+            setField={this.setField}
+            activeField={activeField}
           />
         </Row>
         {children || (submitButton === false && cancelButton === false) ? children : (

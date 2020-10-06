@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { omit, isString, isArray } from 'lodash';
+import { omit, isString, isArray, keys } from 'lodash';
 import View from 'react-native-web-ui-components/View';
 import Row from 'react-native-web-ui-components/Row';
 import Column from 'react-native-web-ui-components/Column';
@@ -28,6 +28,21 @@ const styles = StyleSheet.create({
   item: {
     paddingLeft: 10,
   },
+  containerRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap'
+  },
+  row: {
+    flexBasis: '100%',
+    paddingHorizontal: 32
+  },
+  withoutPadding: {
+    paddingHorizontal: 0
+  },
+  halfRow: {
+    flexBasis: '50%',
+    paddingHorizontal: 0
+  }
 });
 
 const attributes = ['type', 'children', 'style', 'columns'];
@@ -44,7 +59,9 @@ const createProperty = (property, gridItem, index, params) => {
     name,
     schema,
     fields,
+    uiSchema
   } = params;
+  const uiProperty = uiSchema[property];
   const propertySchema = schema.properties[property];
   const propertyName = withPrefix(property, name);
 
@@ -79,6 +96,16 @@ const createProperty = (property, gridItem, index, params) => {
     PropertyContainer = React.Fragment;
     propertyContainerProps = {};
   }
+  const onFocus = () => {
+    const {onFocus} = params;
+    if (onFocus) {
+      onFocus(propertyName);
+    }
+  };
+
+  const withoutPadding = propertySchema.format === 'date-time' ||
+      (propertySchema.type === 'object' && keys(propertySchema.properties).length);
+
   const Property = ({
     value,
     meta,
@@ -86,21 +113,28 @@ const createProperty = (property, gridItem, index, params) => {
     uiSchema,
     ...props
   }) => (
-    <PropertyContainer key={propertyName} {...propertyContainerProps}>
-      <PropertyComponent
-        {...props}
-        value={value && value[property]}
-        meta={(meta && meta[property]) || getMeta(propertySchema)}
-        errors={errors && errors[property]}
-        name={propertyName}
-        schema={propertySchema}
-        uiSchema={uiSchema[property]}
-        gridItemType={gridItem.type}
-        gridItemIndex={index}
-        gridItemLength={gridItem.children.length}
-        zIndex={gridItem.children.length - index}
-      />
-    </PropertyContainer>
+      <View style={[
+          styles.row,
+          uiProperty['ui:halfRow'] ? styles.halfRow : {},
+          withoutPadding ? styles.withoutPadding : {}
+        ]}>
+        <PropertyContainer key={propertyName} {...propertyContainerProps}>
+          <PropertyComponent
+              {...props}
+              value={value && value[property]}
+              meta={(meta && meta[property]) || getMeta(propertySchema)}
+              errors={errors && errors[property]}
+              name={propertyName}
+              onFocus={onFocus}
+              schema={propertySchema}
+              uiSchema={uiSchema[property]}
+              gridItemType={gridItem.type}
+              gridItemIndex={index}
+              gridItemLength={gridItem.children.length}
+              zIndex={gridItem.children.length - index}
+          />
+        </PropertyContainer>
+      </View>
   );
   Property.key = propertyName;
   return Property;
@@ -163,7 +197,7 @@ const getGeneralComponent = ({
     <Wrapper
       className={`FormGridItem__${gridItem.type}`}
       {...omit(gridItem, attributes)}
-      style={[gridItem.style, { zIndex }, gridStyle]}
+      style={[gridItem.style, { zIndex }, gridStyle, styles.containerRow]}
     >
       {items.map(Child => <Child key={Child.key} {...props} />)}
     </Wrapper>
@@ -181,12 +215,16 @@ const createGridItem = (props) => {
 };
 
 const createGrid = (grid, params) => {
+  const onFocus = (name) => {
+    params.setField(name);
+  };
+
   const items = grid.map((gridItem, i) => createGridItem({
-    params,
+    params: {...params, onFocus},
     gridItem,
     first: i === 0,
     zIndex: grid.length - i,
-    key: `${params.name}-${i}`,
+    key: `${params.name}-${i}`
   }));
   return (props) => {
     const currentStyle = props.style; // eslint-disable-line

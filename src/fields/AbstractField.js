@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import { last, isArray, isString } from 'lodash';
+import {last, isArray, isString, noop} from 'lodash';
 import Row from 'react-native-web-ui-components/Row';
 import View from 'react-native-web-ui-components/View';
 import {
@@ -29,6 +29,16 @@ const styles = StyleSheet.create({
   containerWithLabel: {
     height: 60,
   },
+  leftRow: {
+    paddingRight: 8,
+    paddingLeft: 32
+  },
+  rightRow: {
+    paddingLeft: 8,
+  },
+  fullRow: {
+    paddingHorizontal: 32
+  }
 });
 
 class AbstractField extends React.Component {
@@ -58,6 +68,8 @@ class AbstractField extends React.Component {
     meta: PropTypes.any, // eslint-disable-line
     errors: PropTypes.any, // eslint-disable-line
     value: PropTypes.any, // eslint-disable-line
+    onFocus: PropTypes.func,
+    activeField: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -66,12 +78,21 @@ class AbstractField extends React.Component {
     errors: {},
     value: undefined,
     zIndex: 0,
+    onFocus: noop,
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { clearCache, update, name } = nextProps;
+    const { clearCache, update, name, activeField } = nextProps;
     const { inFocus } = nextState;
-    return name === '' || clearCache || update === 'all' || update[name] || inFocus !== this.state.inFocus || false;
+    return (
+        name === '' ||
+        clearCache ||
+        update === 'all' ||
+        update[name] ||
+        inFocus !== this.state.inFocus ||
+        this.props.activeField !== activeField ||
+        false
+    );
   }
 
   getDefaultWidget() { // eslint-disable-line
@@ -79,19 +100,21 @@ class AbstractField extends React.Component {
   }
 
   renderErrors() {
-    let { errors } = this.props;
-    const { widgets, uiSchema } = this.props;
+    const { widgets, uiSchema, errors, schema } = this.props;
 
     const { ErrorWidget } = widgets;
+    const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
+    const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
+    const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
 
-    errors = errors.filter(error => isString(error));
-    return errors.map((error, i) => (
+    return errors.filter(isString).map((error, i) => (
       <ErrorWidget
         uiSchema={uiSchema}
         key={error}
         first={i === 0}
         last={i === errors.length - 1}
         auto={uiSchema['ui:inline']}
+        style={{...leftRow, ...rightRow, ...fullRow}}
         {...(uiSchema['ui:errorProps'] || {})}
       >
         {error}
@@ -127,6 +150,10 @@ class AbstractField extends React.Component {
     if (required[toPath(name, '[]')]) {
       title += '*';
     }
+    const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
+    const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
+    const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
+
     return (
       <LabelWidget
         {...this.props}
@@ -135,6 +162,7 @@ class AbstractField extends React.Component {
         hasTitle={hasTitle}
         hasError={hasError}
         auto={uiSchema['ui:inline']}
+        style={{...leftRow, ...rightRow, ...fullRow}}
         {...(uiSchema['ui:titleProps'] || {})}
       >
         {title}
@@ -172,11 +200,15 @@ class AbstractField extends React.Component {
   }
 
   onFocus = () => {
-    this.setState({inFocus: true});
+    const {onFocus} = this.props;
+    if (onFocus) {
+      onFocus();
+    }
+    this.setState(() => ({inFocus: true}));
   };
 
   onBlur = () => {
-    this.setState({inFocus: false});
+    this.setState(() => ({inFocus: false}));
   };
 
   render() {
@@ -192,6 +224,7 @@ class AbstractField extends React.Component {
       titleOnly,
       zIndex,
       clearCache,
+      activeField,
     } = this.props;
     const { inFocus } = this.state;
 
@@ -271,7 +304,11 @@ class AbstractField extends React.Component {
               readonly={!!uiSchema['ui:readonly']}
               onFocus={this.onFocus}
               onBlur={this.onBlur}
+              rightRow={uiSchema['ui:rightRow']}
+              leftRow={uiSchema['ui:leftRow']}
               {...(uiSchema['ui:widgetProps'] || {})}
+              activeField={activeField}
+              inFocus={activeField === name && inFocus}
             />
             {hasError ? this.renderErrors() : null}
           </React.Fragment>
