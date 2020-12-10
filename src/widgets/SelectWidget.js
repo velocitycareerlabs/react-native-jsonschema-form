@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
+import ModalDropdown from 'react-native-modal-dropdown';
 import Icon from 'react-native-web-ui-components/Icon';
 import StylePropType from 'react-native-web-ui-components/StylePropType';
-import {StyleSheet, Platform, Text, TouchableOpacity} from 'react-native';
+import {StyleSheet, Platform, Text, TouchableOpacity, View} from 'react-native';
 import Picker from 'react-native-picker';
-import DropDownPicker from 'react-native-dropdown-picker';
 import {isArray, isNaN, noop, without} from 'lodash';
 import { useOnChange } from '../utils';
 
@@ -18,32 +18,30 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     marginBottom: 10,
   },
+  pickerContainer: {
+    width: '100%',
+    marginBottom: 10
+  },
   picker: {
     width: '100%',
     height: 40,
-    backgroundColor: 'transparent',
-    borderTopWidth: 0,
-    borderLeftWidth: 0,
-    borderRightWidth: 0,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottomWidth: 1,
     paddingLeft: 0,
     marginLeft: 0,
   },
   item: {
-    justifyContent: 'flex-start',
-    paddingLeft: 0,
-    marginLeft: 0,
-  },
-  pickerContainer: {
-    flexDirection: 'row',
-    marginBottom: 10,
+    fontSize: 15,
+    lineHeight: 20,
+    paddingLeft: 10,
+    paddingVertical: 15
   },
   dropdown: {
-    width: '100%',
+    width: '80%',
     elevation: 5,
     backgroundColor: '#FFFFFF',
-  },
-  label: {
-    marginLeft: 0,
   },
   icon: {
     fontSize: 12,
@@ -123,11 +121,13 @@ const SelectWidget = (props) => {
     onChange(val[0]);
   };
 
-  const onSelect = (item) => {
-    onChange(item.value);
+  const onSelect = (index) => {
+    onChange(labels[index]);
   };
 
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
+
+  const dropdownHeight = labels.length * 50;
 
   return Platform.OS === 'ios' ?
       (
@@ -155,24 +155,30 @@ const SelectWidget = (props) => {
           </TouchableOpacity>
       ) :
       (
-          <DropDownPicker
-            items={labels.map(item => ({
-              label: item,
-              value: item
-            }))}
-            defaultValue={value}
-            itemStyle={styles.item}
-            style={[styles.picker, hasError ? theme.input.error.border : {}, style]}
-            containerStyle={styles.pickerContainer}
-            dropDownStyle={styles.dropdown}
-            labelStyle={[theme.input.regular.text, styles.label]}
-            placeholderStyle={placeholderStyle}
-            selectedtLabelStyle={styles.label}
-            activeLabelStyle={styles.label}
-            activeItemStyle={styles.label}
-            onChangeItem={onSelect}
-            placeholder={placeholder}
-        />
+          <ModalDropdown
+              style={styles.pickerContainer}
+              textStyle={[theme.input.regular.text]}
+              dropdownTextStyle={[theme.input.regular.text, styles.item]}
+              dropdownStyle={[styles.dropdown, {height: dropdownHeight > 200 ? 200 : dropdownHeight}]}
+              options={labels}
+              onSelect={onSelect}
+              renderSeparator={() => <View />}
+          >
+            <View style={[styles.picker, theme.input.regular.border, hasError ? theme.input.error.border : {}, style]}>
+              {placeholder ?
+                  (
+                      <Text style={[theme.input.regular.text, placeholderStyle]}>
+                        {placeholder}
+                      </Text>
+                  ) :
+                  (
+                      <Text style={theme.input.regular.text}>
+                        {value}
+                      </Text>
+                  )}
+              <Icon style={styles.icon} name="chevron-down" />
+            </View>
+          </ModalDropdown>
     );
 };
 
