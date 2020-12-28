@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   },
   buttonBlock: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
   },
   buttonTitle: {
     fontSize: 16,
@@ -123,7 +123,7 @@ const DateWidget = (props) => {
   };
 
   const formattedValue = (value || date) ?
-      moment(new Date(value || date)).parseZone().format('MMM YYYY') :
+      moment(new Date(value || date)).parseZone().format(uiSchema['ui:dateFormat'] || 'MMM YYYY') :
       '';
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
@@ -159,6 +159,11 @@ const DateWidget = (props) => {
             <TouchableOpacity onPress={onCancel}>
               <Text style={styles.buttonTitle}>
                 Cancel
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={togglePicker}>
+              <Text style={styles.buttonTitle}>
+                Ok
               </Text>
             </TouchableOpacity>
           </View>
