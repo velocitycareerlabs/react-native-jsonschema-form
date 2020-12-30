@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Text,
   Keyboard,
+  Platform
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import StylePropType from 'react-native-web-ui-components/StylePropType';
@@ -94,10 +95,24 @@ const DateWidget = (props) => {
   }, [activeField, prevActiveField, name]);
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    const dateToSave = moment(new Date(currentDate)).parseZone().format('MM/DD/YYYY');
-    setDate(currentDate);
-    onWrappedChange(dateToSave);
+    if (Platform.OS !== 'ios') {
+      if (selectedDate === undefined) {
+        onCancel();
+      } else {
+        setShow(false);
+        const dateToSave = moment(new Date(selectedDate)).parseZone().format('MM/DD/YYYY');
+        setDate(selectedDate);
+        onWrappedChange(dateToSave);
+        if (onBlur) {
+          onBlur();
+        }
+      }
+    } else {
+      const currentDate = selectedDate || date;
+      const dateToSave = moment(new Date(currentDate)).parseZone().format('MM/DD/YYYY');
+      setDate(currentDate);
+      onWrappedChange(dateToSave);
+    }
   };
 
   const togglePicker = () => {
@@ -155,18 +170,20 @@ const DateWidget = (props) => {
       </TouchableOpacity>
       {show && (
         <View style={[styles.pickerContainer, rightPicker]}>
-          <View style={[styles.buttonBlock, theme.input.regular.border]}>
-            <TouchableOpacity onPress={onCancel}>
-              <Text style={styles.buttonTitle}>
-                Cancel
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={togglePicker}>
-              <Text style={styles.buttonTitle}>
-                Ok
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {Platform.OS === 'ios' ?
+              <View style={[styles.buttonBlock, theme.input.regular.border]}>
+                <TouchableOpacity onPress={onCancel}>
+                  <Text style={styles.buttonTitle}>
+                    Cancel
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={togglePicker}>
+                  <Text style={styles.buttonTitle}>
+                    Ok
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              : null}
           <DateTimePicker
             testID="dateTimePicker"
             value={new Date(value || date)}
