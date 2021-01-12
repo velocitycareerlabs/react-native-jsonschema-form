@@ -8,6 +8,7 @@ import {
   isFunction,
   isEmpty
 } from 'lodash';
+import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import { titleize } from 'underscore.string';
 import Screen from 'react-native-web-ui-components/Screen';
 import Icon from 'react-native-web-ui-components/Icon';
@@ -22,8 +23,6 @@ import RemoveHandle from './RemoveHandle';
 import Item from './Item';
 
 /* eslint react/no-array-index-key: 0 */
-
-const uiTitleRegex = /\.ui_/;
 
 const getItem = (schema) => {
   let newItem = '';
@@ -80,6 +79,11 @@ const getProps = (props) => {
     value,
     key: last(name.split('.')),
   });
+  const itemTitle = getTitle(uiSchema['ui:itemTitle'] || FIELD_TITLE, {
+    name,
+    value,
+    key: last(name.split('.')),
+  });
 
   const propertySchema = schema.items;
   const propertyUiSchema = uiSchema.items;
@@ -97,7 +101,7 @@ const getProps = (props) => {
     minimumNumberOfItems: (
       options.minimumNumberOfItems === undefined
       || options.minimumNumberOfItems === null
-    ) ? 1 : options.minimumNumberOfItems,
+    ) ? 0 : options.minimumNumberOfItems,
     addLabel: options.addLabel || `Add ${formatTitle(title)}`,
     removeLabel: options.removeLabel || 'Remove',
     orderLabel: options.orderLabel || <Icon name="th" />,
@@ -110,6 +114,7 @@ const getProps = (props) => {
     OrderComponent: options.OrderComponent || OrderHandle,
     RemoveComponent: options.RemoveComponent || RemoveHandle,
     ItemComponent: options.ItemComponent || Item,
+    itemTitle: formatTitle(itemTitle)
   };
   return { ...props, ...extraProps };
 };
@@ -196,39 +201,62 @@ const ArrayWidget = (props) => {
     name,
     value,
     title,
-    addLabel,
-    addable,
     widgets,
     schema,
     uiSchema,
     errors,
     screenType,
     propertyUiSchema,
-    minimumNumberOfItems,
-    AddComponent,
     ItemComponent,
+    theme
   } = params;
 
   const { LabelWidget } = widgets;
   const hasError = isArray(errors) && errors.length > 0 && !errors.hidden;
   const hasTitle = uiSchema['ui:title'] !== false;
   const toggleable = !!uiSchema['ui:toggleable'];
-  const missingItems = Math.max(0, minimumNumberOfItems - value.length);
+
+  const addComponent = (
+      <TouchableOpacity activeOpacity={1} onPress={onAdd}>
+        <Icon style={styles.icon} name="plus-circle" />
+      </TouchableOpacity>
+  );
 
   return (
     <React.Fragment>
-      {hasTitle || toggleable ? (
-        <LabelWidget
-          {...params}
-          toggleable={toggleable}
-          hasTitle={hasTitle}
-          hasError={hasError}
-          auto={uiSchema['ui:inline']}
-          {...(uiSchema['ui:titleProps'] || {})}
-        >
-          {title}
-        </LabelWidget>
+      {(hasTitle || toggleable) && !isEmpty(value) ? (
+          <View style={styles.labelContainer}>
+            <LabelWidget
+                {...params}
+                toggleable={toggleable}
+                hasTitle={hasTitle}
+                hasError={hasError}
+                auto
+                {...(uiSchema['ui:titleProps'] || {})}
+            >
+              {title}
+            </LabelWidget>
+            {addComponent}
+          </View>
       ) : null}
+      {isEmpty(value) ?
+          (
+              <View
+                  style={[
+                    styles.inputTextContainer,
+                    theme.input.regular.border
+                  ]}
+              >
+                {hasTitle ?
+                    (
+                        <Text style={[theme.input.regular.text, theme.input.regular.placeholder]}>
+                          {title}
+                        </Text>
+                    ) :
+                    null}
+                {addComponent}
+              </View>
+          ) : null}
       {times(value.length, (index) => {
         const itemUiSchema = adjustUiSchema(propertyUiSchema, index, params);
         return (
@@ -247,29 +275,32 @@ const ArrayWidget = (props) => {
       />
         );
       })}
-      {times(missingItems, (index) => {
-        const itemUiSchema = adjustUiSchema(propertyUiSchema, value.length + index, params);
-        return (
-          <ItemComponent
-            {...params}
-            onRemove={onRemove}
-            key={`${review}.${name}.${value.length + index}`}
-            propertyName={`${name}.${value.length + index}`}
-            propertyValue={getItem(schema)}
-            propertyMeta={getItem(schema) || {}}
-            propertyErrors={errors && errors[index]}
-            propertyUiSchema={itemUiSchema}
-            index={index}
-            noTitle={screenType !== 'xs' && itemUiSchema['ui:noTitle'] !== false}
-            onChangeText={(val) => onChangeText(params, val, index)}
-          />
-        );
-      })}
-      {addable && !uiTitleRegex.test(name) ? (
-        <AddComponent {...params} onPress={onAdd} addLabel={addLabel} />
-      ) : null}
     </React.Fragment>
   );
 };
+
+const styles = StyleSheet.create({
+  labelContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  inputTextContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: 60,
+    paddingVertical: 8,
+    paddingRight: 12,
+    marginBottom: 10,
+  },
+  icon: {
+    color: '#007AFF',
+    fontSize: 22,
+    fontWeight: '400',
+  }
+});
 
 export default ArrayWidget;

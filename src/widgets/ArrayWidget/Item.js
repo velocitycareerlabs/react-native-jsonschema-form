@@ -12,6 +12,7 @@ const Item = ({
   propertyErrors,
   PropertyField,
   RemoveComponent,
+  itemTitle,
   ...props
 }) => {
   const {
@@ -27,7 +28,7 @@ const Item = ({
             {...props}
             name={propertyName}
             schema={propertySchema}
-            uiSchema={propertyUiSchema}
+            uiSchema={{...propertyUiSchema, 'ui:title': `${itemTitle} ${props.index + 1}`}}
             errors={propertyErrors}
             value={propertyValue}
             meta={propertyMeta}
@@ -55,6 +56,7 @@ Item.propTypes = {
   RemoveComponent: PropTypes.elementType.isRequired,
   PropertyField: PropTypes.elementType.isRequired,
   auto: PropTypes.bool,
+  itemTitle: PropTypes.string,
   propertyValue: PropTypes.any, // eslint-disable-line
   propertyErrors: PropTypes.any, // eslint-disable-line
 };
@@ -62,6 +64,7 @@ Item.propTypes = {
 Item.defaultProps = {
   auto: false,
   propertyErrors: undefined,
+  itemTitle: ''
 };
 
 export default Item;
