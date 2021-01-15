@@ -138,6 +138,7 @@ class AbstractField extends React.Component {
     }
     const hasTitle = !(
       noTitle
+      || uiSchema['ui:noLabel']
       || uiSchema['ui:title'] === false
       || schema.type === 'object'
       || this.cache === ArrayWidget
