@@ -190,6 +190,7 @@ const DateWidget = (props) => {
             minimumDate={uiSchema['ui:minDate'] || null}
             maximumDate={uiSchema['ui:maxDate'] || null}
             onChange={onChange}
+            display={Platform.OS !== 'ios' ? 'default' : 'spinner'}
           />
         </View>
       )}
