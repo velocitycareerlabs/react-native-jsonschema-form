@@ -80,7 +80,7 @@ const DateWidget = (props) => {
 
   const hidePicker = () => {
     const currentDate = value || date;
-    const dateToSave = currentDate && format(new Date(currentDate), 'MM/DD/YYYY');
+    const dateToSave = currentDate && format(new Date(currentDate), 'MM/dd/yyyy');
     onWrappedChange(dateToSave);
     if (onBlur) {
       onBlur();
@@ -100,7 +100,7 @@ const DateWidget = (props) => {
         onCancel();
       } else {
         setShow(false);
-        const dateToSave = format(new Date(selectedDate), 'MM/DD/YYYY');
+        const dateToSave = format(new Date(selectedDate), 'MM/dd/yyyy');
         setDate(selectedDate);
         onWrappedChange(dateToSave);
         if (onBlur) {
@@ -109,7 +109,7 @@ const DateWidget = (props) => {
       }
     } else {
       const currentDate = selectedDate || date;
-      const dateToSave = format(new Date(currentDate), 'MM/DD/YYYY');
+      const dateToSave = format(new Date(currentDate), 'MM/dd/yyyy');
       setDate(currentDate);
       onWrappedChange(dateToSave);
     }
@@ -138,7 +138,7 @@ const DateWidget = (props) => {
   };
 
   const formattedValue = (value || date) ?
-      format(new Date(value || date), uiSchema['ui:dateFormat'] || 'MMM YYYY') :
+      format(new Date(value || date), uiSchema['ui:dateFormat'] || 'MMM yyyy') :
       '';
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
