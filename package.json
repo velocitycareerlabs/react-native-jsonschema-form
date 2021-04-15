@@ -1,6 +1,6 @@
 {
   "name": "react-native-jsonschema-web-form",
-  "version": "0.3.37",
+  "version": "0.3.38",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -36,6 +36,7 @@
     "eslint-plugin-react-hooks": "4.0.8"
   },
   "dependencies": {
+    "date-fns": "^2.10.0",
     "lodash": "^4.17.11",
     "prop-types": "^15.6.2",
     "react-native-modal-dropdown": "git+https://github.com/siemiatj/react-native-modal-dropdown.git",
