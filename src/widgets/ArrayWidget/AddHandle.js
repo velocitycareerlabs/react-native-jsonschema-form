@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-native-web-ui-components/Button';
+import {Button} from 'react-native';
 import { get } from 'lodash';
 
 const AddHandle = ({ theme, onPress, addLabel }) => (

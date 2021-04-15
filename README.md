@@ -53,10 +53,10 @@ If your project is also being used for web, please install React Native Web. Mak
 yarn add react-dom react-native-web 
 ```
 
-This library is backed by [react-native-web-ui-components](https://www.npmjs.com/package/react-native-web-ui-components). Please make sure you have installed `react-native-web-ui-components` and its dependencies. All inputs and buttons will follow the theme used on your project. The form must be within `<UIProvider>` but doesn't need to be a direct child.
+This library is backed by [react-native-elements](https://reactnativeelements.com/). Please make sure you have installed `react-native-elements` and its dependencies.
 
 ```sh
-yarn add react-native-web-ui-components
+yarn add react-native-elements
 ```
 
 Please make sure you have installed `react-native-community/datetimepicker` and its dependencies.
@@ -87,8 +87,7 @@ yarn add react-native-web-jsonschema-form
 import React from 'react';
 import { useHistory } from 'react-router';
 import { Alert } from 'react-native';
-import { UIProvider } from 'react-native-web-ui-components';
-import Form from 'react-native-web-jsonschema-form';
+import { UIProvider, Form } from 'react-native-web-jsonschema-form';
 import { Router, Switch } from 'react-router-dom';
 // import { Router, Switch } from 'react-router-native';
 
@@ -157,7 +156,7 @@ const App = () => {
 import React from 'React';
 import PropTypes from 'prop-types';
 import { Loading, Alert } from 'react-native-web-ui-components';
-import Form from 'react-native-web-jsonschema-form';
+import { Form } from 'react-native-web-jsonschema-form';
 
 class MyForm extends React.Component {
   static propTypes = {
@@ -207,7 +206,7 @@ class MyForm extends React.Component {
     if (!schema) {
       const self = this;
       fetch(`/get-schema/${controller}/${action}`)
-        .then((schema) => self.setState({ schema });
+        .then((schema) => self.setState({ schema }));
 
       return <Loading />;
     }
@@ -333,6 +332,6 @@ const Example = ({
   SubmitButton, // Component to render the submit button
   CancelButton, // Component to render the cancel button
 }) => (
-  <Form {...}/>
+  <Form />
 )
 ```

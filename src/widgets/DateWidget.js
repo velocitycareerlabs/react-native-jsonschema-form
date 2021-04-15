@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
   Text,
   Keyboard,
-  Platform
+  Platform,
+  ViewPropTypes,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
 import {
   useOnChange,
   usePrevious
@@ -205,7 +205,7 @@ DateWidget.propTypes = {
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   hasError: PropTypes.bool,
-  style: StylePropType,
+  style: ViewPropTypes.style,
   placeholder: PropTypes.string,
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,

@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Button } from 'react-native';
 import PropTypes from 'prop-types';
-import Button from 'react-native-web-ui-components/Button';
-import { withTheme } from 'react-native-web-ui-components/Theme';
+import { withTheme } from './Theme';
 
 const styles = StyleSheet.create({
   button: {

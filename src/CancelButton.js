@@ -1,12 +1,11 @@
 import React from 'react';
+import {Button} from 'react-native';
 import PropTypes from 'prop-types';
-import Button from 'react-native-web-ui-components/Button';
-import { withTheme } from 'react-native-web-ui-components/Theme';
+import { withTheme } from './Theme';
 
 const CancelButton = ({ text, onPress }) => (
   <Button
     auto
-    className="Form__cancelButton"
     flat={false}
     type="white"
     onPress={onPress}

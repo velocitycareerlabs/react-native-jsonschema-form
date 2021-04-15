@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, ViewPropTypes } from 'react-native';
 import { noop, isString, isFunction } from 'lodash';
-import TextInput from 'react-native-web-ui-components/TextInput';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
 import { isEmpty, formatMask } from '../utils';
+import TextInput from './TextInput';
 
 const styles = StyleSheet.create({
   defaults: {
@@ -39,7 +38,7 @@ class TextInputWidget extends React.Component {
     name: PropTypes.string.isRequired,
     uiSchema: PropTypes.shape().isRequired,
     hasError: PropTypes.bool.isRequired,
-    style: StylePropType,
+    style: ViewPropTypes.style,
     mask: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
     onBlur: PropTypes.func,
     onFocus: PropTypes.func,

@@ -1,12 +1,11 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import ModalDropdown from 'react-native-modal-dropdown';
-import Icon from 'react-native-web-ui-components/Icon';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
-import {StyleSheet, Platform, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Platform, Text, TouchableOpacity, View, ViewPropTypes} from 'react-native';
 import Picker from 'react-native-picker';
 import {isArray, isNaN, noop, without} from 'lodash';
 import { useOnChange } from '../utils';
+import {Icon} from "react-native-elements";
 
 const styles = StyleSheet.create({
   container: {
@@ -151,7 +150,12 @@ const SelectWidget = (props) => {
                       {value}
                     </Text>
                 )}
-            <Icon style={styles.icon} name="chevron-down" />
+            <Icon
+                color="#697079"
+                size={25}
+                name="chevron-down"
+                type="material-community"
+            />
           </TouchableOpacity>
       ) :
       (
@@ -176,7 +180,12 @@ const SelectWidget = (props) => {
                         {value}
                       </Text>
                   )}
-              <Icon style={styles.icon} name="chevron-down" />
+              <Icon
+                  color="#697079"
+                  size={25}
+                  name="chevron-down"
+                  type="material-community"
+              />
             </View>
           </ModalDropdown>
     );
@@ -188,7 +197,7 @@ SelectWidget.propTypes = {
   uiSchema: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
   value: PropTypes.any, // eslint-disable-line
-  style: StylePropType,
+  style: ViewPropTypes.style,
   placeholder: PropTypes.string,
   onBlur: PropTypes.func,
   onFocus: PropTypes.func,

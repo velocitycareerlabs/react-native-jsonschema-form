@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
-import Icon from 'react-native-web-ui-components/Icon';
-import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, Image, TouchableOpacity, Text, ViewPropTypes } from 'react-native';
 import ImagePicker from 'react-native-image-picker';
+import {Icon} from "react-native-elements";
 
 const styles = StyleSheet.create({
   inputTextContainer: {
@@ -82,7 +81,12 @@ const FileWidget = (props) => {
             ) :
             null}
         {value ? <Image style={styles.image} source={{uri: value}} /> :
-            <Icon style={styles.icon} name="plus-circle" />
+            <Icon
+                color="#007AFF"
+                size={27}
+                name="plus-circle-outline"
+                type="material-community"
+            />
         }
       </TouchableOpacity>
   );
@@ -92,7 +96,7 @@ FileWidget.propTypes = {
   name: PropTypes.string.isRequired,
   theme: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
-  style: StylePropType,
+  style: ViewPropTypes.style,
   placeholder: PropTypes.string,
 };
 

@@ -1,9 +1,7 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
 import {last, isArray, isString, noop} from 'lodash';
-import Row from 'react-native-web-ui-components/Row';
-import View from 'react-native-web-ui-components/View';
 import {
   getComponent,
   getTitle,
@@ -265,9 +263,9 @@ class AbstractField extends React.Component {
       }
       // Show errors for hidden fields
       return (
-        <Row xs={12} {...containerProps} hasError={hasError}>
+        <View {...containerProps}>
           {this.renderErrors()}
-        </Row>
+        </View>
       );
     }
     const key = last(name.split('.'));
@@ -277,14 +275,9 @@ class AbstractField extends React.Component {
       value,
     };
     const placeholder = this.getPlaceholder(params);
-    const fieldClassName = schema.type !== 'object' && Widget !== ArrayWidget
-      ? `${id}-field ${id}-field-${name.replace(/\./g, '-')}`
-      : '';
     return (
       <View
         {...containerProps}
-        className={`${fieldClassName} ${containerProps.className || ''}`}
-        hasError={hasError}
         style={[
           styles.container,
           uiSchema['ui:inline'] ? styles.fieldInline : styles.field,

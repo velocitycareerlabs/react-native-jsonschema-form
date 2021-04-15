@@ -12,8 +12,7 @@ import {
   isError,
   isPlainObject,
 } from 'lodash';
-import Row from 'react-native-web-ui-components/Row';
-import { withTheme } from 'react-native-web-ui-components/Theme';
+import { withTheme } from './Theme';
 import {
   toPath,
   expand,
@@ -30,6 +29,8 @@ import defaultWidgets from './widgets';
 import FormEvent from './FormEvent';
 import DefaultCancelButton from './CancelButton';
 import DefaultSubmitButton from './SubmitButton';
+
+export {UIProvider} from './UIProvider';
 
 export {
   FIELD_KEY,
@@ -479,7 +480,6 @@ class JsonSchemaForm extends React.Component {
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <Row className={`Form ${this.id}`} style={styles.form}>
           <ObjectField
             {...this.props}
             name=""
@@ -503,9 +503,8 @@ class JsonSchemaForm extends React.Component {
             setField={this.setField}
             activeField={activeField}
           />
-        </Row>
         {children || (submitButton === false && cancelButton === false) ? children : (
-          <Row className="Form__buttonContainer" style={getButtonPosition(buttonPosition)}>
+              <>
             {cancelButton ? (
               <CancelButton
                 onPress={this.onCancel}
@@ -521,11 +520,11 @@ class JsonSchemaForm extends React.Component {
             {isValidElement(customSubmitButton)
               ? cloneElement(customSubmitButton, { onPress: this.onSubmit })
               : null}
-          </Row>
+              </>
         )}
       </React.Fragment>
     );
   }
 }
 
-export default withTheme('JsonSchemaForm')(JsonSchemaForm);
+export const Form = withTheme('JsonSchemaForm')(JsonSchemaForm);

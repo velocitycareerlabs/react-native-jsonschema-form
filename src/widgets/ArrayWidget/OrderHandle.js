@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet } from 'react-native';
-import View from 'react-native-web-ui-components/View';
-import Text from 'react-native-web-ui-components/Text';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
+import { StyleSheet, View, Text, ViewPropTypes } from 'react-native';
 import Div from '../../Div';
 
 const styles = StyleSheet.create({
@@ -28,7 +25,6 @@ const OrderHandle = ({
   handle,
   panHandlers,
   titleOnly,
-  screenType,
   orderLabel,
   orderStyle,
 }) => (
@@ -40,7 +36,7 @@ const OrderHandle = ({
         type={theme.colors.text}
         style={[
           styles.order,
-          screenType === 'xs' ? styles.xs : null,
+          styles.xs,
           titleOnly ? styles.hidden : null,
           orderStyle,
         ]}
@@ -53,12 +49,11 @@ const OrderHandle = ({
 
 OrderHandle.propTypes = {
   theme: PropTypes.shape().isRequired,
-  screenType: PropTypes.string.isRequired,
   handle: PropTypes.string.isRequired,
   titleOnly: PropTypes.bool.isRequired,
   panHandlers: PropTypes.shape(),
   orderLabel: PropTypes.node.isRequired,
-  orderStyle: StylePropType,
+  orderStyle: ViewPropTypes.style,
 };
 
 OrderHandle.defaultProps = {

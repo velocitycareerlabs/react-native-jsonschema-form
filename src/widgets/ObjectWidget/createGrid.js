@@ -1,11 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { omit, isString, isArray, keys } from 'lodash';
-import View from 'react-native-web-ui-components/View';
-import Row from 'react-native-web-ui-components/Row';
-import Column from 'react-native-web-ui-components/Column';
-import Screen from 'react-native-web-ui-components/Screen';
-import { Helmet, style } from 'react-native-web-ui-components/Helmet';
 import { getComponent, withPrefix } from '../../utils';
 
 /* eslint react/prop-types: 0 */
@@ -83,11 +78,11 @@ const createProperty = (property, gridItem, index, params) => {
   if (gridItem.type === 'grid') {
     const columns = gridItem.columns || [];
     const column = (isArray(columns) ? columns[index] : columns) || {};
-    PropertyContainer = Row;
+    PropertyContainer = View;
     propertyContainerProps = {
       ...column,
       style: [
-        Screen.getType() !== 'xs' ? styles.item : null,
+        styles.item,
         { zIndex: gridItem.children.length - index },
         column.style || null,
       ],
@@ -174,13 +169,13 @@ const getGeneralComponent = ({
 }) => {
   let Wrapper;
   if (gridItem.type === 'column') {
-    Wrapper = Column;
+    Wrapper = View;
   } else if (gridItem.type === 'view') {
     Wrapper = View;
   } else {
-    Wrapper = Row;
+    Wrapper = View;
   }
-  const gridStyle = Screen.getType() !== 'xs' && gridItem.type === 'grid' ? styles.grid : null;
+  const gridStyle = gridItem.type === 'grid' ? styles.grid : null;
   const items = gridItem.children.map((child, i) => {
     if (isString(child)) {
       return createProperty(child, gridItem, i, params);
@@ -229,20 +224,9 @@ const createGrid = (grid, params) => {
   return (props) => {
     const currentStyle = props.style; // eslint-disable-line
     return (
-      <Row style={currentStyle}>
-        {Screen.getType() !== 'xs' ? (
-          <Helmet>
-            <style>
-              {`
-                [data-class~="FormGridItem__grid"] {
-                  width: calc(100% + 10px);
-                }
-              `}
-            </style>
-          </Helmet>
-        ) : null}
+      <View style={currentStyle}>
         {items.map(GridItem => <GridItem key={GridItem.key} {...props} />)}
-      </Row>
+      </View>
     );
   };
 };

@@ -10,8 +10,7 @@ import {
 } from 'lodash';
 import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
 import { titleize } from 'underscore.string';
-import Screen from 'react-native-web-ui-components/Screen';
-import Icon from 'react-native-web-ui-components/Icon';
+import {Icon} from 'react-native-elements';
 import {
   getTitle,
   getComponent,
@@ -73,7 +72,6 @@ const getProps = (props) => {
 
   const value = isArray(originalValue) ? originalValue : [];
 
-  const screenType = Screen.getType();
   const title = getTitle(uiSchema['ui:title'] || FIELD_TITLE, {
     name,
     value,
@@ -93,7 +91,6 @@ const getProps = (props) => {
   const extraProps = {
     value,
     title,
-    screenType,
     propertySchema,
     propertyUiSchema,
     PropertyField,
@@ -104,7 +101,7 @@ const getProps = (props) => {
     ) ? 0 : options.minimumNumberOfItems,
     addLabel: options.addLabel || `Add ${formatTitle(title)}`,
     removeLabel: options.removeLabel || 'Remove',
-    orderLabel: options.orderLabel || <Icon name="th" />,
+    orderLabel: options.orderLabel,
     removeStyle: options.removeStyle,
     orderStyle: options.orderStyle,
     addable: options.addable !== false,
@@ -205,7 +202,6 @@ const ArrayWidget = (props) => {
     schema,
     uiSchema,
     errors,
-    screenType,
     propertyUiSchema,
     ItemComponent,
     theme
@@ -217,8 +213,13 @@ const ArrayWidget = (props) => {
   const toggleable = !!uiSchema['ui:toggleable'];
 
   const addComponent = (
-      <TouchableOpacity activeOpacity={1} onPress={onAdd}>
-        <Icon style={styles.icon} name="plus-circle" />
+      <TouchableOpacity style={styles.icon} activeOpacity={1} onPress={onAdd}>
+        <Icon
+            color="#007AFF"
+            size={27}
+            name="plus-circle-outline"
+            type="material-community"
+        />
       </TouchableOpacity>
   );
 
@@ -270,7 +271,6 @@ const ArrayWidget = (props) => {
             propertyErrors={errors && errors[index]}
             propertyUiSchema={itemUiSchema}
             index={index}
-            noTitle={screenType !== 'xs' && itemUiSchema['ui:noTitle'] !== false}
             onChangeText={(val) => onChangeText(params, val, index)}
       />
         );

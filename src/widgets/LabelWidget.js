@@ -1,12 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View, Text, ViewPropTypes } from 'react-native';
 import { pick, omit } from 'lodash';
-import { useTheme } from 'react-native-web-ui-components/Theme';
-import View from 'react-native-web-ui-components/View';
-import Text from 'react-native-web-ui-components/Text';
-import Checkbox from 'react-native-web-ui-components/Checkbox';
-import StylePropType from 'react-native-web-ui-components/StylePropType';
+import { useTheme } from '../Theme';
 import { viewStyleKeys } from '../utils';
 
 const styles = StyleSheet.create({
@@ -63,7 +59,6 @@ const LabelWidget = (preProps) => {
     auto,
     hasTitle,
     toggleable,
-    className,
   } = props;
 
   const onCheckboxPress = useOnPress(props);
@@ -85,21 +80,9 @@ const LabelWidget = (preProps) => {
   const css = StyleSheet.flatten(style || {});
 
   return (
-    <View className={className} style={[currentContainerStyle, pick(css, viewStyleKeys)]}>
-      {toggleable ? (
-        <Checkbox
-          text={null}
-          checked={!(meta && meta['ui:disabled'])}
-          value
-          auto
-          style={styles.checkbox}
-          styleChecked={styles.checkboxIcon}
-          styleUnchecked={styles.checkboxIcon}
-          onPress={onCheckboxPress}
-        />
-      ) : null}
+    <View style={[currentContainerStyle, pick(css, viewStyleKeys)]}>
       {hasTitle ? (
-        <Text auto onPress={onPress} style={[currentTextStyle, omit(css, viewStyleKeys)]}>
+        <Text onPress={onPress} style={[currentTextStyle, omit(css, viewStyleKeys)]}>
           {children}
         </Text>
       ) : null}
@@ -114,12 +97,11 @@ LabelWidget.propTypes = {
   hasTitle: PropTypes.bool.isRequired,
   toggleable: PropTypes.bool.isRequired,
   children: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
-  style: StylePropType,
+  style: ViewPropTypes.style,
   label: PropTypes.bool,
   auto: PropTypes.bool,
   meta: PropTypes.any, // eslint-disable-line
   onPress: PropTypes.func,
-  className: PropTypes.string,
 };
 
 LabelWidget.defaultProps = {
@@ -128,7 +110,6 @@ LabelWidget.defaultProps = {
   auto: false,
   children: null,
   onPress: undefined,
-  className: '',
 };
 
 export default LabelWidget;

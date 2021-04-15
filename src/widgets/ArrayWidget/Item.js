@@ -17,7 +17,6 @@ const Item = ({
 }) => {
   const {
     removable,
-    screenType,
     propertyUiSchema,
   } = props;
   const onRemovePress = useOnRemovePress(props)
@@ -33,10 +32,10 @@ const Item = ({
             value={propertyValue}
             meta={propertyMeta}
         />
-        {removable && (screenType !== 'xs' || RemoveComponent !== RemoveHandle) ? (
+        {removable && (RemoveComponent !== RemoveHandle) ? (
           <RemoveComponent onRemovePress={onRemovePress} {...props} />
         ) : null}
-      {removable && screenType === 'xs' && RemoveComponent === RemoveHandle ? (
+      {removable && RemoveComponent === RemoveHandle ? (
         <RemoveComponent onRemovePress={onRemovePress} {...props} />
       ) : null}
     </React.Fragment>
@@ -46,7 +45,6 @@ const Item = ({
 Item.propTypes = {
   value: PropTypes.arrayOf(PropTypes.any).isRequired,
   index: PropTypes.number.isRequired,
-  screenType: PropTypes.string.isRequired,
   propertyName: PropTypes.string.isRequired,
   propertySchema: PropTypes.shape().isRequired,
   propertyUiSchema: PropTypes.shape().isRequired,
