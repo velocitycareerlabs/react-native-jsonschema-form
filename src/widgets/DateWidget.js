@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import {format} from 'date-fns';
+import moment from 'moment';
 import {
   StyleSheet, View,
   Dimensions,
@@ -80,7 +80,7 @@ const DateWidget = (props) => {
 
   const hidePicker = () => {
     const currentDate = value || date;
-    const dateToSave = currentDate && format(new Date(currentDate), 'MM/dd/yyyy');
+    const dateToSave = currentDate && moment(new Date(currentDate)).format('MM/DD/YYYY');
     onWrappedChange(dateToSave);
     if (onBlur) {
       onBlur();
@@ -100,7 +100,7 @@ const DateWidget = (props) => {
         onCancel();
       } else {
         setShow(false);
-        const dateToSave = format(new Date(selectedDate), 'MM/dd/yyyy');
+        const dateToSave = moment(new Date(selectedDate)).format('MM/DD/YYYY');
         setDate(selectedDate);
         onWrappedChange(dateToSave);
         if (onBlur) {
@@ -109,7 +109,7 @@ const DateWidget = (props) => {
       }
     } else {
       const currentDate = selectedDate || date;
-      const dateToSave = format(new Date(currentDate), 'MM/dd/yyyy');
+      const dateToSave = moment(new Date(currentDate)).format('MM/DD/YYYY');
       setDate(currentDate);
       onWrappedChange(dateToSave);
     }
@@ -138,7 +138,7 @@ const DateWidget = (props) => {
   };
 
   const formattedValue = (value || date) ?
-      format(new Date(value || date), uiSchema['ui:dateFormat'] || 'MMM yyyy') :
+      moment(new Date(value || date)).format(uiSchema['ui:dateFormat'] || 'MMM YYYY') :
       '';
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};

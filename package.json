@@ -1,6 +1,6 @@
 {
   "name": "react-native-jsonschema-web-form",
-  "version": "0.3.40",
+  "version": "0.3.43",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -36,8 +36,8 @@
     "eslint-plugin-react-hooks": "4.0.8"
   },
   "dependencies": {
-    "date-fns": "^2.10.0",
     "lodash": "^4.17.11",
+    "moment": "^2.29.1",
     "prop-types": "^15.6.2",
     "react-native-modal-dropdown": "git+https://github.com/siemiatj/react-native-modal-dropdown.git",
     "react-native-picker": "^4.3.7",
@@ -45,8 +45,7 @@
   },
   "peerDependencies": {
     "react": "16.13.1",
-    "react-native": "^0.63.4",
-    "react-native-image-picker": "^2.3.4"
+    "react-native": "^0.63.4"
   },
   "browserslist": [
     ">0.2%",
