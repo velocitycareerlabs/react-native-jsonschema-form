@@ -1,6 +1,6 @@
 {
   "name": "@velocitycareerlabs/react-native-jsonschema-web-form",
-  "version": "0.3.43",
+  "version": "0.3.46",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -42,10 +42,6 @@
     "react-native-modal-dropdown": "git+https://github.com/siemiatj/react-native-modal-dropdown.git",
     "react-native-picker": "^4.3.7",
     "underscore.string": "^3.3.5"
-  },
-  "peerDependencies": {
-    "react": "16.13.1",
-    "react-native": "^0.63.4"
   },
   "browserslist": [
     ">0.2%",
