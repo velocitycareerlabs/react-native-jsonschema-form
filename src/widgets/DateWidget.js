@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
   StyleSheet, View,
-  Dimensions,
   TouchableOpacity,
   Text,
   Keyboard,
@@ -16,15 +15,15 @@ import {
   usePrevious
 } from '../utils';
 import {noop, get} from "lodash";
+import { LayoutAnimation } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 10,
   },
   pickerContainer: {
-    width: Math.round(Dimensions.get('window').width),
     backgroundColor: '#fff',
+    marginBottom: 10
   },
   buttonBlock: {
     flexDirection: 'row',
@@ -32,8 +31,8 @@ const styles = StyleSheet.create({
   },
   buttonTitle: {
     fontSize: 16,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingHorizontal: 24,
+    paddingVertical: 8
   },
   rightPicker: {
     marginLeft: '-100%'
@@ -53,7 +52,7 @@ const styles = StyleSheet.create({
     paddingRight: 32
   },
   fullRow: {
-    paddingHorizontal: 32
+    paddingHorizontal: 24
   }
 });
 
@@ -120,6 +119,14 @@ const DateWidget = (props) => {
     if (show) {
       hidePicker();
     } else {
+      LayoutAnimation.configureNext({
+        duration: 250,
+        create: {
+            type: LayoutAnimation.Types.linear,
+            property: LayoutAnimation.Properties.opacity
+        },     
+      });
+
       Keyboard.dismiss();
       setDate(new Date());
       if (onFocus) {
@@ -173,12 +180,12 @@ const DateWidget = (props) => {
           {Platform.OS === 'ios' ?
               <View style={[styles.buttonBlock, theme.input.regular.border]}>
                 <TouchableOpacity onPress={onCancel}>
-                  <Text style={styles.buttonTitle}>
+                  <Text style={[styles.buttonTitle, theme.Datepicker.buttons]}>
                     Cancel
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={togglePicker}>
-                  <Text style={styles.buttonTitle}>
+                  <Text style={[styles.buttonTitle, theme.Datepicker.buttons]}>
                     Ok
                   </Text>
                 </TouchableOpacity>

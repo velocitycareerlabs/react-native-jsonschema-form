@@ -215,9 +215,9 @@ const ArrayWidget = (props) => {
   const addComponent = (
       <TouchableOpacity style={styles.icon} activeOpacity={1} onPress={onAdd}>
         <Icon
-            color="#007AFF"
-            size={27}
-            name="plus-circle-outline"
+            color="#FFF"
+            size={16}
+            name="plus"
             type="material-community"
         />
       </TouchableOpacity>
@@ -293,13 +293,15 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     paddingVertical: 8,
-    paddingRight: 12,
-    marginBottom: 10,
   },
   icon: {
-    color: '#007AFF',
-    fontSize: 22,
+    backgroundColor: 'black',
+    height: 20,
+    width: 20,
+    borderRadius: 10,
     fontWeight: '400',
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 

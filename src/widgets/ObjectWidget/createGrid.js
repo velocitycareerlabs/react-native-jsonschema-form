@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
     paddingTop: 10,
-    paddingBottom: 5,
+    paddingBottom: 5
   },
   grid: {
     marginLeft: -10,
@@ -27,14 +27,14 @@ const styles = StyleSheet.create({
   },
   containerRow: {
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   row: {
     flexBasis: '100%',
-    paddingHorizontal: 32
+    paddingHorizontal: 22,
   },
   withoutPadding: {
-    paddingHorizontal: 0
+    paddingHorizontal: 0,
   },
   halfRow: {
     flexBasis: '50%',
@@ -69,6 +69,7 @@ const createProperty = (property, gridItem, index, params) => {
   }
 
   const PropertyComponent = getComponent(propertySchema.type, 'Field', fields);
+
   if (!PropertyComponent) {
     const UnexistentPropertyComponent = () => null;
     UnexistentPropertyComponent.key = propertyName;
@@ -134,6 +135,9 @@ const createProperty = (property, gridItem, index, params) => {
       </View>
   );
   Property.key = propertyName;
+
+  console.log('');
+
   return Property;
 };
 
@@ -177,6 +181,7 @@ const getGeneralComponent = ({
   } else {
     Wrapper = Row;
   }
+
   const gridStyle = gridItem.type === 'grid' ? styles.grid : null;
   const items = gridItem.children.map((child, i) => {
     if (isString(child)) {
@@ -188,6 +193,7 @@ const getGeneralComponent = ({
       key: `${key}-${i}`,
       zIndex: gridItem.children.length - i,
       first: i === 0,
+      last: i === gridItem.children.length - 1
     });
   });
   const GridItem = props => (

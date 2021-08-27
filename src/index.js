@@ -1,6 +1,6 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform, Keyboard } from 'react-native';
+import { StyleSheet, Platform, Keyboard, View } from 'react-native';
 import {
   set,
   get,
@@ -480,7 +480,8 @@ class JsonSchemaForm extends React.Component {
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-          <ObjectField
+          <View style={formStyles.form}>
+            <ObjectField
             {...this.props}
             name=""
             id={this.id}
@@ -503,6 +504,7 @@ class JsonSchemaForm extends React.Component {
             setField={this.setField}
             activeField={activeField}
           />
+        </View>
         {children || (submitButton === false && cancelButton === false) ? children : (
               <>
             {cancelButton ? (
@@ -528,3 +530,19 @@ class JsonSchemaForm extends React.Component {
 }
 
 export const Form = withTheme('JsonSchemaForm')(JsonSchemaForm);
+
+const formStyles = StyleSheet.create({
+  form: {
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: 'white',
+    borderRadius: 14,
+    shadowColor: '#FF2D55',
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: {
+        height: 0,
+        width: 0
+    }
+  }
+});

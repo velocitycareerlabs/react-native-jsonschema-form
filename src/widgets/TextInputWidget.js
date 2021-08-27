@@ -6,9 +6,6 @@ import { isEmpty, formatMask } from '../utils';
 import TextInput from './TextInput';
 
 const styles = StyleSheet.create({
-  defaults: {
-    marginBottom: 10,
-  },
   fullWidth: {
     width: '100%',
   },
@@ -234,7 +231,6 @@ class TextInputWidget extends React.Component {
     register(this.setText);
 
     const currentStyle = [
-      styles.defaults,
       auto ? styles.auto : styles.fullWidth,
       style,
     ];
