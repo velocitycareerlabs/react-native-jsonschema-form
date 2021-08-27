@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     paddingLeft: 8,
   },
   fullRow: {
-    paddingHorizontal: 32
+    paddingHorizontal: 24
   },
   label: {
     paddingTop: 3,

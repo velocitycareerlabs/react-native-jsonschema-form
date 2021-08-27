@@ -3,15 +3,16 @@ import PropTypes from 'prop-types';
 import {noop, pick} from 'lodash';
 import { TextInput as RNTextInput, StyleSheet, Platform, ViewPropTypes } from 'react-native';
 import { useTheme } from '../Theme';
+import { LayoutAnimation } from 'react-native';
 
 const styles = StyleSheet.create({
     empty: {},
     defaults: {
-        paddingTop: 8,
+        paddingTop: 5,
         paddingBottom: 8,
         paddingLeft: 12,
         paddingRight: 12,
-        height: 40,
+        minHeight: 40,
     },
 });
 
@@ -98,6 +99,14 @@ const TextInput = (props) => {
     } = useTheme('TextInput', props);
 
     const wrappedOnFocus = (...args) => {
+        LayoutAnimation.configureNext({
+            duration: 250,
+            create: {
+                type: LayoutAnimation.Types.linear,
+                property: LayoutAnimation.Properties.opacity
+            },     
+          });
+
         if (multiline && scroller) {
             scroller.setNativeProps({ scrollEnabled: false });
         }
