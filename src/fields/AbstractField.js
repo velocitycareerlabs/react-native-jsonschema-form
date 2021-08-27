@@ -36,6 +36,9 @@ const styles = StyleSheet.create({
   },
   fullRow: {
     paddingHorizontal: 32
+  },
+  label: {
+    paddingTop: 3,
   }
 });
 
@@ -161,7 +164,7 @@ class AbstractField extends React.Component {
         hasTitle={hasTitle}
         hasError={hasError}
         auto={uiSchema['ui:inline']}
-        style={{...leftRow, ...rightRow, ...fullRow}}
+        style={{...leftRow, ...rightRow, ...fullRow, ...styles.label}}
         {...(uiSchema['ui:titleProps'] || {})}
       >
         {title}
