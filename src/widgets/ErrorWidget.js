@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { withTheme } from '../Theme';
 
 const styles = StyleSheet.create({
@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
   auto: {
     marginTop: 0,
     marginBottom: 0,
+  },
+  container: {
+    marginTop: 10
   },
   first: {
     marginTop: -10,
@@ -40,9 +43,12 @@ const ErrorWidget = ({
     style.push(styles.last);
   }
   return (
-    <Text style={[style, auto ? styles.auto : null]}>
-      {children}
-    </Text>
+      <View style={styles.container}>
+        <Text style={[style, auto ? styles.auto : null]}>
+          {children}
+        </Text>
+      </View>
+
   );
 };
 
