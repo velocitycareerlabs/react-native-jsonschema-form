@@ -6,7 +6,18 @@ const styles = StyleSheet.create({
   remove: {
     paddingLeft: 10,
     paddingTop: 11,
-    color: '#007AFF'
+    fontSize: 11,
+    fontWeight: '600',
+    ...Platform.select(
+      {
+        ios: {
+          color: '#007AFF'
+        }, 
+        android: {
+          color: '#7489A8',
+          fontFamily: 'Roboto-Medium'
+        }
+      })
   },
   hidden: {
     opacity: 0,

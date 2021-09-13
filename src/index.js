@@ -543,6 +543,12 @@ const formStyles = StyleSheet.create({
     shadowOffset: {
         height: 0,
         width: 0
-    }
+    },
+    ...Platform.select({
+      android: {
+        borderRadius: 4,
+        elevation: 3
+      }
+    })
   }
 });
