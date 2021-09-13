@@ -5,6 +5,7 @@ import { StyleSheet, Text, ViewPropTypes } from 'react-native';
 const styles = StyleSheet.create({
   remove: {
     paddingLeft: 10,
+    paddingTop: 11,
     fontSize: 11,
     fontWeight: '600',
     ...Platform.select(

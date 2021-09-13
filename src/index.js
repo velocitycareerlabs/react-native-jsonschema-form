@@ -1,6 +1,6 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform, Keyboard, View, PlatformColor } from 'react-native';
+import { StyleSheet, Platform, Keyboard, View } from 'react-native';
 import {
   set,
   get,
