@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
         paddingLeft: 12,
         paddingRight: 12,
         minHeight: 40,
+        textAlignVertical: 'center'
     },
 });
 

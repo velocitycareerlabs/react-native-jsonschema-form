@@ -8,7 +8,7 @@ import {
   isFunction,
   isEmpty
 } from 'lodash';
-import {Text, View, TouchableOpacity, StyleSheet} from 'react-native';
+import {Text, View, TouchableOpacity, StyleSheet, Platform} from 'react-native';
 import { titleize } from 'underscore.string';
 import {Icon} from 'react-native-elements';
 import {
@@ -295,13 +295,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   icon: {
-    backgroundColor: 'black',
     height: 20,
     width: 20,
     borderRadius: 10,
     fontWeight: '400',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    ...Platform.select({ios: {backgroundColor: '#000000'}, android: {backgroundColor: '#7489A8'}})
   }
 });
 
