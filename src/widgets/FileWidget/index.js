@@ -1,8 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Image, TouchableOpacity, Text, ViewPropTypes } from 'react-native';
+import {
+  StyleSheet, Image, TouchableOpacity, Text, ViewPropTypes, View, Platform,
+} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
-import {Icon} from "react-native-elements";
+import Plus from './plus.svg';
+import PlusAndroid from './plus-android.svg';
 
 const styles = StyleSheet.create({
   inputTextContainer: {
@@ -16,17 +19,17 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   withPlaceholder: {
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   image: {
     width: 88,
-    height: 88
+    height: 88,
   },
   icon: {
     color: '#007AFF',
     fontSize: 22,
     fontWeight: '400',
-  }
+  },
 });
 
 const FileWidget = (props) => {
@@ -61,34 +64,35 @@ const FileWidget = (props) => {
   };
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
 
+  const isIOS = Boolean(process.env.STORYBOOK_IS_IOS) || Platform.OS === 'ios';
+
   return (
-      <TouchableOpacity
-          activeOpacity={1}
-          onPress={showPicker}
-          style={[
-            styles.inputTextContainer,
-            theme.input.regular.border,
-            hasError ? theme.input.error.border : {},
-            style,
-            placeholder ? styles.withPlaceholder : {}
-          ]}
-      >
-        {placeholder ?
-            (
-                <Text style={[theme.input.regular.text, placeholderStyle]}>
-                  {placeholder}
-                </Text>
-            ) :
-            null}
-        {value ? <Image style={styles.image} source={{uri: value}} /> :
-            <Icon
-                color="#007AFF"
-                size={27}
-                name="plus-circle-outline"
-                type="material-community"
-            />
-        }
-      </TouchableOpacity>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={showPicker}
+      style={[
+        styles.inputTextContainer,
+        theme.input.regular.border,
+        hasError ? theme.input.error.border : {},
+        style,
+        placeholder ? styles.withPlaceholder : {},
+      ]}
+    >
+      {placeholder
+        ? (
+          <Text style={[theme.input.regular.text, placeholderStyle]}>
+            {placeholder}
+          </Text>
+        )
+        : null}
+      {value ? <Image style={styles.image} source={{ uri: value }} />
+        : (
+          <View>
+            {isIOS ? (<Plus width={24} height={24} />)
+              : (<PlusAndroid width={24} height={24} />)}
+          </View>
+        )}
+    </TouchableOpacity>
   );
 };
 
