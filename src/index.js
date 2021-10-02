@@ -1,6 +1,8 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform, Keyboard, View } from 'react-native';
+import {
+  StyleSheet, Platform, Keyboard, View,
+} from 'react-native';
 import {
   set,
   get,
@@ -30,7 +32,7 @@ import FormEvent from './FormEvent';
 import DefaultCancelButton from './CancelButton';
 import DefaultSubmitButton from './SubmitButton';
 
-export {UIProvider} from './UIProvider';
+export { UIProvider } from './UIProvider';
 
 export {
   FIELD_KEY,
@@ -229,7 +231,7 @@ class JsonSchemaForm extends React.Component {
       metaSchemaProp: metaSchema,
       update: {},
       clearCache: false,
-      activeField: ''
+      activeField: '',
     };
 
     onRef(this);
@@ -321,7 +323,7 @@ class JsonSchemaForm extends React.Component {
   };
 
   onSubmit = () => {
-    this.setState(() => ({activeField: ''}));
+    this.setState(() => ({ activeField: '' }));
     if (Platform.OS !== 'web') {
       Keyboard.dismiss();
     }
@@ -450,7 +452,7 @@ class JsonSchemaForm extends React.Component {
   }
 
   setField = (name) => {
-    this.setState(() => ({activeField: name}));
+    this.setState(() => ({ activeField: name }));
   };
 
   render() {
@@ -480,8 +482,8 @@ class JsonSchemaForm extends React.Component {
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-          <View style={formStyles.form}>
-            <ObjectField
+        <View style={formStyles.form}>
+          <ObjectField
             {...this.props}
             name=""
             id={this.id}
@@ -506,7 +508,7 @@ class JsonSchemaForm extends React.Component {
           />
         </View>
         {children || (submitButton === false && cancelButton === false) ? children : (
-              <>
+          <>
             {cancelButton ? (
               <CancelButton
                 onPress={this.onCancel}
@@ -522,7 +524,7 @@ class JsonSchemaForm extends React.Component {
             {isValidElement(customSubmitButton)
               ? cloneElement(customSubmitButton, { onPress: this.onSubmit })
               : null}
-              </>
+          </>
         )}
       </React.Fragment>
     );
@@ -541,14 +543,14 @@ const formStyles = StyleSheet.create({
     shadowOpacity: 0.14,
     shadowRadius: 8,
     shadowOffset: {
-        height: 0,
-        width: 0
+      height: 0,
+      width: 0,
     },
     ...Platform.select({
       android: {
         borderRadius: 4,
-        elevation: 3
-      }
-    })
-  }
+        elevation: 3,
+      },
+    }),
+  },
 });
