@@ -100,7 +100,7 @@ const getProps = (props) => {
       || options.minimumNumberOfItems === null
     ) ? 0 : options.minimumNumberOfItems,
     addLabel: options.addLabel || `Add ${formatTitle(title)}`,
-    removeLabel: options.removeLabel || 'Remove',
+    removeLabel: options.removeLabel || 'Delete',
     orderLabel: options.orderLabel,
     removeStyle: options.removeStyle,
     orderStyle: options.orderStyle,
@@ -207,7 +207,6 @@ const ArrayWidget = (props) => {
     theme
   } = params;
 
-  const { LabelWidget } = widgets;
   const hasError = isArray(errors) && errors.length > 0 && !errors.hidden;
   const hasTitle = uiSchema['ui:title'] !== false;
   const toggleable = !!uiSchema['ui:toggleable'];
@@ -225,22 +224,7 @@ const ArrayWidget = (props) => {
 
   return (
     <React.Fragment>
-      {(hasTitle || toggleable) && !isEmpty(value) ? (
-          <View style={styles.labelContainer}>
-            <LabelWidget
-                {...params}
-                toggleable={toggleable}
-                hasTitle={hasTitle}
-                hasError={hasError}
-                auto
-                {...(uiSchema['ui:titleProps'] || {})}
-            >
-              {title}
-            </LabelWidget>
-            {addComponent}
-          </View>
-      ) : null}
-      {isEmpty(value) ?
+      {isEmpty(value) || hasTitle || toggleable ?
           (
               <View
                   style={[
@@ -250,7 +234,11 @@ const ArrayWidget = (props) => {
               >
                 {hasTitle ?
                     (
-                        <Text style={[theme.input.regular.text, theme.input.regular.placeholder]}>
+                        <Text style={[
+                            theme.input.regular.text,
+                            theme.input.regular.placeholder,
+                            hasError && {color: theme.input.error.placeholder.color}
+                        ]}>
                           {title}
                         </Text>
                     ) :
@@ -272,6 +260,7 @@ const ArrayWidget = (props) => {
             propertyUiSchema={itemUiSchema}
             index={index}
             onChangeText={(val) => onChangeText(params, val, index)}
+            withoutHorizontalPadding
       />
         );
       })}
