@@ -56,7 +56,8 @@ const createProperty = (property, gridItem, index, params) => {
     name,
     schema,
     fields,
-    uiSchema
+    uiSchema,
+    withoutHorizontalPadding
   } = params;
   const uiProperty = uiSchema[property];
   const propertySchema = schema.properties[property];
@@ -101,7 +102,7 @@ const createProperty = (property, gridItem, index, params) => {
     }
   };
 
-  const withoutPadding = propertySchema.format === 'date-time' ||
+  const withoutPadding = withoutHorizontalPadding || propertySchema.format === 'date-time' ||
       (propertySchema.type === 'object' && keys(propertySchema.properties).length);
 
   const Property = ({
