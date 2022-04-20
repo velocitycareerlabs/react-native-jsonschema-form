@@ -198,6 +198,7 @@ const DateWidget = (props) => {
             maximumDate={uiSchema['ui:maxDate'] || null}
             onChange={onChange}
             display={Platform.OS !== 'ios' ? 'default' : 'spinner'}
+            themeVariant="light"
           />
         </View>
       )}
