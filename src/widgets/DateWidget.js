@@ -8,14 +8,14 @@ import {
   Keyboard,
   Platform,
   ViewPropTypes,
+  LayoutAnimation,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { noop, get } from 'lodash';
 import {
   useOnChange,
-  usePrevious
+  usePrevious,
 } from '../utils';
-import {noop, get} from "lodash";
-import { LayoutAnimation } from 'react-native';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     backgroundColor: '#fff',
-    marginBottom: 10
+    marginBottom: 10,
   },
   buttonBlock: {
     flexDirection: 'row',
@@ -31,29 +31,25 @@ const styles = StyleSheet.create({
   },
   buttonTitle: {
     fontSize: 16,
-    paddingHorizontal: 24,
-    paddingVertical: 8
+    paddingVertical: 8,
   },
   rightPicker: {
-    marginLeft: '-100%'
+    marginLeft: '-100%',
   },
   inputContainer: {
     justifyContent: 'center',
     width: '100%',
     height: 40,
-    paddingVertical: 8
+    paddingVertical: 8,
   },
   leftRow: {
     paddingRight: 8,
-    paddingLeft: 32
+    paddingLeft: 32,
   },
   rightRow: {
     paddingLeft: 8,
-    paddingRight: 32
+    paddingRight: 32,
   },
-  fullRow: {
-    paddingHorizontal: 24
-  }
 });
 
 const DateWidget = (props) => {
@@ -70,7 +66,7 @@ const DateWidget = (props) => {
     name,
     inFocus,
     rightRow,
-    leftRow
+    leftRow,
   } = props;
   const [date, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
@@ -122,9 +118,9 @@ const DateWidget = (props) => {
       LayoutAnimation.configureNext({
         duration: 250,
         create: {
-            type: LayoutAnimation.Types.linear,
-            property: LayoutAnimation.Properties.opacity
-        },     
+          type: LayoutAnimation.Types.linear,
+          property: LayoutAnimation.Properties.opacity,
+        },
       });
 
       Keyboard.dismiss();
@@ -144,9 +140,9 @@ const DateWidget = (props) => {
     }
   };
 
-  const formattedValue = (value || date) ?
-      moment(new Date(value || date)).format(uiSchema['ui:dateFormat'] || 'MMM YYYY') :
-      '';
+  const formattedValue = (value || date)
+    ? moment(new Date(value || date)).format(uiSchema['ui:dateFormat'] || 'MMM YYYY')
+    : '';
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
   const rightPicker = rightRow ? styles.rightPicker : {};
@@ -157,27 +153,27 @@ const DateWidget = (props) => {
         activeOpacity={1}
         onPress={togglePicker}
         style={[
-          rightRow ? styles.rightRow : styles.fullRow,
-          leftRow ? styles.leftRow : {}
+          rightRow ? styles.rightRow : {},
+          leftRow ? styles.leftRow : {},
         ]}
       >
         <View
-            style={[
-                theme.input.regular.border,
-                hasError ? theme.input.error.border : {},
-                styles.inputContainer,
-                style
-            ]}
+          style={[
+            theme.input.regular.border,
+            hasError ? theme.input.error.border : {},
+            styles.inputContainer,
+            style,
+          ]}
         >
-          {placeholder ?
-              <Text style={[theme.input.regular.text, placeholderStyle]}>{placeholder}</Text> :
-              <Text style={[theme.input.regular.text, textStyle]}>{formattedValue}</Text>
-          }
+          {placeholder
+            ? <Text style={[theme.input.regular.text, placeholderStyle]}>{placeholder}</Text>
+            : <Text style={[theme.input.regular.text, textStyle]}>{formattedValue}</Text>}
         </View>
       </TouchableOpacity>
       {show && (
         <View style={[styles.pickerContainer, rightPicker]}>
-          {Platform.OS === 'ios' ?
+          {Platform.OS === 'ios'
+            ? (
               <View style={[styles.buttonBlock, theme.input.regular.border]}>
                 <TouchableOpacity onPress={onCancel}>
                   <Text style={[styles.buttonTitle, theme.Datepicker.buttons]}>
@@ -190,7 +186,8 @@ const DateWidget = (props) => {
                   </Text>
                 </TouchableOpacity>
               </View>
-              : null}
+            )
+            : null}
           <DateTimePicker
             testID="dateTimePicker"
             value={new Date(value || date)}
@@ -220,7 +217,7 @@ DateWidget.propTypes = {
   activeField: PropTypes.string.isRequired,
   inFocus: PropTypes.bool.isRequired,
   rightRow: PropTypes.bool,
-  leftRow: PropTypes.bool
+  leftRow: PropTypes.bool,
 };
 
 DateWidget.defaultProps = {
