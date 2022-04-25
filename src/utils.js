@@ -148,7 +148,7 @@ export const getStructure = (
   if (schema.anyOf) {
     schema = first(schema.anyOf);
   } else if (schema.oneOf) {
-    schema = first(schema.oneOf);
+    schema = uiSchema['ui:oneOf'] || first(schema.oneOf);
   }
   if (schema.type === 'object') {
     const schemaNode = {
@@ -455,8 +455,8 @@ export const usePrevious = (value) => {
   const ref = useRef();
 
   useEffect(() => {
-  ref.current = value;
-}, [value]);
+    ref.current = value;
+  }, [value]);
 
   return ref.current;
 };
