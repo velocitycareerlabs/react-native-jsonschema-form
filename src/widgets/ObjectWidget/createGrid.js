@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { omit, isString, isArray, keys } from 'lodash';
+import {
+  omit, isString, isArray, keys,
+} from 'lodash';
 import Row from '../common/Row';
 import Column from '../common/Column';
 import { getComponent, withPrefix } from '../../utils';
@@ -16,7 +18,7 @@ const styles = StyleSheet.create({
   label: {
     fontWeight: 'bold',
     paddingTop: 10,
-    paddingBottom: 5
+    paddingBottom: 5,
   },
   grid: {
     marginLeft: -10,
@@ -38,8 +40,8 @@ const styles = StyleSheet.create({
   },
   halfRow: {
     flexBasis: '50%',
-    paddingHorizontal: 0
-  }
+    paddingHorizontal: 0,
+  },
 });
 
 const attributes = ['type', 'children', 'style', 'columns'];
@@ -57,7 +59,7 @@ const createProperty = (property, gridItem, index, params) => {
     schema,
     fields,
     uiSchema,
-    withoutHorizontalPadding
+    withoutHorizontalPadding,
   } = params;
   const uiProperty = uiSchema[property];
   const propertySchema = schema.properties[property];
@@ -69,7 +71,7 @@ const createProperty = (property, gridItem, index, params) => {
     return UnexistentProperty;
   }
 
-  const PropertyComponent = getComponent(propertySchema.type, 'Field', fields);
+  const PropertyComponent = getComponent(propertySchema.type || 'string', 'Field', fields);
 
   if (!PropertyComponent) {
     const UnexistentPropertyComponent = () => null;
@@ -96,14 +98,14 @@ const createProperty = (property, gridItem, index, params) => {
     propertyContainerProps = {};
   }
   const onFocus = () => {
-    const {onFocus} = params;
+    const { onFocus } = params;
     if (onFocus) {
       onFocus(propertyName);
     }
   };
 
-  const withoutPadding = withoutHorizontalPadding || propertySchema.format === 'date-time' ||
-      (propertySchema.type === 'object' && keys(propertySchema.properties).length);
+  const withoutPadding = withoutHorizontalPadding || propertySchema.format === 'date-time'
+      || (propertySchema.type === 'object' && keys(propertySchema.properties).length);
 
   const Property = ({
     value,
@@ -112,28 +114,29 @@ const createProperty = (property, gridItem, index, params) => {
     uiSchema,
     ...props
   }) => (
-      <View style={[
-          styles.row,
-          uiProperty['ui:halfRow'] ? styles.halfRow : {},
-          withoutPadding ? styles.withoutPadding : {}
-        ]}>
-        <PropertyContainer key={propertyName} {...propertyContainerProps}>
-          <PropertyComponent
-              {...props}
-              value={value && value[property]}
-              meta={(meta && meta[property]) || getMeta(propertySchema)}
-              errors={errors && errors[property]}
-              name={propertyName}
-              onFocus={onFocus}
-              schema={propertySchema}
-              uiSchema={uiSchema[property]}
-              gridItemType={gridItem.type}
-              gridItemIndex={index}
-              gridItemLength={gridItem.children.length}
-              zIndex={gridItem.children.length - index}
-          />
-        </PropertyContainer>
-      </View>
+    <View style={[
+      styles.row,
+      uiProperty['ui:halfRow'] ? styles.halfRow : {},
+      withoutPadding ? styles.withoutPadding : {},
+    ]}
+    >
+      <PropertyContainer key={propertyName} {...propertyContainerProps}>
+        <PropertyComponent
+          {...props}
+          value={value && value[property]}
+          meta={(meta && meta[property]) || getMeta(propertySchema)}
+          errors={errors && errors[property]}
+          name={propertyName}
+          onFocus={onFocus}
+          schema={propertySchema}
+          uiSchema={uiSchema[property]}
+          gridItemType={gridItem.type}
+          gridItemIndex={index}
+          gridItemLength={gridItem.children.length}
+          zIndex={gridItem.children.length - index}
+        />
+      </PropertyContainer>
+    </View>
   );
   Property.key = propertyName;
 
@@ -194,7 +197,7 @@ const getGeneralComponent = ({
       key: `${key}-${i}`,
       zIndex: gridItem.children.length - i,
       first: i === 0,
-      last: i === gridItem.children.length - 1
+      last: i === gridItem.children.length - 1,
     });
   });
   const GridItem = props => (
@@ -224,11 +227,11 @@ const createGrid = (grid, params) => {
   };
 
   const items = grid.map((gridItem, i) => createGridItem({
-    params: {...params, onFocus},
+    params: { ...params, onFocus },
     gridItem,
     first: i === 0,
     zIndex: grid.length - i,
-    key: `${params.name}-${i}`
+    key: `${params.name}-${i}`,
   }));
   return (props) => {
     const currentStyle = props.style; // eslint-disable-line
