@@ -140,8 +140,6 @@ const createProperty = (property, gridItem, index, params) => {
   );
   Property.key = propertyName;
 
-  console.log('');
-
   return Property;
 };
 
