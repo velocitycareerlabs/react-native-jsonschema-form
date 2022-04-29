@@ -147,6 +147,9 @@ const TextInput = (props) => {
             onBlur={wrappedOnBlur}
             editable={editable && !(disabled || readonly)}
             placeholderTextColor={StyleSheet.flatten(themeInputStyle.placeholder).color}
+            onSubmitEditing={(event)=>{
+                event.preventDefault()
+            }}
         />
     );
 };
