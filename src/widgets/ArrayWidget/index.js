@@ -175,7 +175,7 @@ const useReorder = ({ review, setState }) => () => setState({
 
 const onChangeText = (props, val, index) => {
   const nextValue = isEmpty(props.value) ? [val] : map(props.value, (item, key) => index === key ? val : item);
-  props.onChange(nextValue, props.name)
+  props.onChange(nextValue, props.activeField)
 }
 
 const ArrayWidget = (props) => {
