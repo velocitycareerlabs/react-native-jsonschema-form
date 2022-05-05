@@ -232,9 +232,8 @@ const createGrid = (grid, params) => {
     key: `${params.name}-${i}`,
   }));
   return (props) => {
-    const currentStyle = props.style; // eslint-disable-line
     return (
-      <Row style={currentStyle}>
+      <Row>
         {items.map(GridItem => <GridItem key={GridItem.key} {...props} />)}
       </Row>
     );
