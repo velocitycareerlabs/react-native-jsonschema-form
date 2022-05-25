@@ -1,6 +1,6 @@
 {
   "name": "@velocitycareerlabs/react-native-jsonschema-web-form",
-  "version": "0.3.70",
+  "version": "0.3.71",
   "private": false,
   "main": "index.js",
   "scripts": {

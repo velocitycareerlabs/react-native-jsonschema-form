@@ -485,7 +485,7 @@ class JsonSchemaForm extends React.Component {
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <View style={[...formStyles.form, ...formStyles]}>
+        <View style={[formStyles.form, formStyles]}>
           <ObjectField
             {...this.props}
             name=""
