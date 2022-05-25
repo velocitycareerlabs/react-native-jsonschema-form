@@ -479,13 +479,12 @@ class JsonSchemaForm extends React.Component {
       SubmitButton,
       buttonPosition,
       customSubmitButton,
-      formStyles
     } = this.props;
 
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <View style={[formStyles.form, formStyles]}>
+        <View style={[formStyles.form, this.props.formStyles]}>
           <ObjectField
             {...this.props}
             name=""
