@@ -1,7 +1,7 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, Platform, Keyboard, View, ViewPropTypes
+  StyleSheet, Platform, Keyboard, View, ViewPropTypes,
 } from 'react-native';
 import {
   set,
@@ -107,7 +107,7 @@ class JsonSchemaForm extends React.Component {
     filterEmptyValues: PropTypes.bool,
     insideClickRegex: PropTypes.instanceOf(RegExp),
     customSubmitButton: PropTypes.node,
-    formStyles: ViewPropTypes.style
+    formStyles: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -134,7 +134,7 @@ class JsonSchemaForm extends React.Component {
     filterEmptyValues: false,
     insideClickRegex: undefined,
     customSubmitButton: null,
-    formStyles: {}
+    formStyles: {},
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -316,6 +316,15 @@ class JsonSchemaForm extends React.Component {
       }
     });
   };
+
+  reset = () => {
+    const { schema, uiSchema, formData } = this.props;
+
+    this.setState({
+      values: getValues(cloneDeep(formData), getStructure(schema, uiSchema).schema),
+      update: 'all',
+    });
+  }
 
   onCancel = () => {
     const { values } = this.state;
