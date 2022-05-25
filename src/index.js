@@ -1,7 +1,7 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, Platform, Keyboard, View,
+  StyleSheet, Platform, Keyboard, View, ViewPropTypes
 } from 'react-native';
 import {
   set,
@@ -107,6 +107,7 @@ class JsonSchemaForm extends React.Component {
     filterEmptyValues: PropTypes.bool,
     insideClickRegex: PropTypes.instanceOf(RegExp),
     customSubmitButton: PropTypes.node,
+    formStyles: ViewPropTypes.style
   };
 
   static defaultProps = {
@@ -133,6 +134,7 @@ class JsonSchemaForm extends React.Component {
     filterEmptyValues: false,
     insideClickRegex: undefined,
     customSubmitButton: null,
+    formStyles: {}
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -477,12 +479,13 @@ class JsonSchemaForm extends React.Component {
       SubmitButton,
       buttonPosition,
       customSubmitButton,
+      formStyles
     } = this.props;
 
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <View style={formStyles.form}>
+        <View style={[...formStyles.form, ...formStyles]}>
           <ObjectField
             {...this.props}
             name=""
