@@ -171,7 +171,12 @@ const DateWidget = (props) => {
         </View>
       </TouchableOpacity>
       {show && (
-        <View style={[styles.pickerContainer, rightPicker]}>
+        <View style={[
+          styles.pickerContainer,
+          rightPicker,
+          theme.input.regular.border,
+          hasError ? theme.input.error.border : {}
+        ]}>
           {Platform.OS === 'ios'
             ? (
               <View style={[styles.buttonBlock, theme.input.regular.border]}>
