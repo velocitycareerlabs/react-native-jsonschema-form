@@ -17,6 +17,9 @@ import {
   usePrevious,
 } from '../utils';
 
+const MIN_DATE = new Date(1900, 0);
+const MAX_DATE = new Date(2100, 0);
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -196,8 +199,8 @@ const DateWidget = (props) => {
           <DateTimePicker
             testID="dateTimePicker"
             value={new Date(value || date)}
-            minimumDate={uiSchema['ui:minDate'] || null}
-            maximumDate={uiSchema['ui:maxDate'] || null}
+            minimumDate={uiSchema['ui:minDate'] || MIN_DATE}
+            maximumDate={uiSchema['ui:maxDate'] || MAX_DATE}
             onChange={onChange}
             display={Platform.OS !== 'ios' ? 'default' : 'spinner'}
             themeVariant="light"
