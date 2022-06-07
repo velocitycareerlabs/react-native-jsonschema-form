@@ -18,6 +18,9 @@ import {
   usePrevious,
 } from '../utils';
 
+const MIN_DATE = new Date(1900, 0);
+const MAX_DATE = new Date(2100, 0);
+
 const styles = StyleSheet.create({
   container: {
     width: '100%',
@@ -172,7 +175,12 @@ const DateWidget = (props) => {
         </View>
       </TouchableOpacity>
       {show && (
-        <View style={[styles.pickerContainer, rightPicker]}>
+        <View style={[
+          styles.pickerContainer,
+          rightPicker,
+          theme.input.regular.border,
+          hasError ? theme.input.error.border : {}
+        ]}>
           {Platform.OS === 'ios'
             ? (
               <View style={[styles.buttonBlock, theme.input.regular.border]}>
@@ -192,8 +200,8 @@ const DateWidget = (props) => {
           <DateTimePicker
             testID="dateTimePicker"
             value={new Date(value || date)}
-            minimumDate={uiSchema['ui:minDate'] || null}
-            maximumDate={uiSchema['ui:maxDate'] || null}
+            minimumDate={uiSchema['ui:minDate'] || MIN_DATE}
+            maximumDate={uiSchema['ui:maxDate'] || MAX_DATE}
             onChange={onChange}
             display={Platform.OS !== 'ios' ? 'default' : 'spinner'}
             themeVariant="light"
