@@ -9,6 +9,7 @@ import {
   Platform,
   ViewPropTypes,
   LayoutAnimation,
+  PixelRatio,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { noop, get } from 'lodash';
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     justifyContent: 'center',
     width: '100%',
-    height: 40,
+    height: 40 * PixelRatio.getFontScale(),
     paddingVertical: 8,
   },
   leftRow: {
