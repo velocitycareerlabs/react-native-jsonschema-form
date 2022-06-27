@@ -97,6 +97,7 @@ class JsonSchemaForm extends React.Component {
     onCancel: PropTypes.func,
     onSuccess: PropTypes.func,
     onError: PropTypes.func,
+    onInit: PropTypes.func,
     buttonPosition: PropTypes.oneOf(['left', 'right', 'center']),
     cancelButton: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
     CancelButton: PropTypes.elementType,
@@ -124,6 +125,7 @@ class JsonSchemaForm extends React.Component {
     onCancel: noop,
     onSuccess: noop,
     onError: noop,
+    onInit: noop,
     buttonPosition: 'right',
     cancelButton: true,
     CancelButton: DefaultCancelButton,
@@ -206,6 +208,7 @@ class JsonSchemaForm extends React.Component {
       metaSchema,
       errorSchema,
       insideClickRegex,
+      onInit,
     } = props;
 
     this.id = `Form__${name || Math.random().toString(36).substr(2, 9)}`;
@@ -218,6 +221,10 @@ class JsonSchemaForm extends React.Component {
     const errors = getErrors(cloneDeep(errorSchema), structure.schema);
     const metas = getMetas(cloneDeep(metaSchema || values), structure.schema, structure.uiSchema);
     const required = getRequired(structure.schema);
+
+    if (onInit) {
+      onInit({ values });
+    }
 
     this.state = {
       values,
