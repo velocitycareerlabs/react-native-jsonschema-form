@@ -111,7 +111,14 @@ const FileWidget = (props) => {
   };
 
   const onImageReceive = (response) => {
-    console.log('Response = ', response.uri);
+    const isAssetsWrapped = response &&
+        response.hasOwnProperty('assets') &&
+        Array.isArray(response.assets) &&
+        response.assets[0];
+
+    const uri = isAssetsWrapped ? response.assets[0].uri : response.uri;
+
+    console.log('Response = ', uri);
 
     if (response.didCancel) {
       console.log('User cancelled image picker');
@@ -126,7 +133,7 @@ const FileWidget = (props) => {
       console.log(response.errorMessage);
       return;
     }
-    onChange(response.uri, name);
+    onChange(uri, name);
   };
 
   const onCameraTap = async () => {
@@ -154,6 +161,7 @@ const FileWidget = (props) => {
     const options = {
       mediaType: 'photo',
       quality: 1,
+      selectionLimit: 1,
     };
     launchImageLibrary(options, onImageReceive);
   };
