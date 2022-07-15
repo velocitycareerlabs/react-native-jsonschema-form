@@ -56,6 +56,8 @@ const styles = StyleSheet.create({
   },
 });
 
+const DATE_FORMAT = 'YYYY-MM-DD';
+
 const DateWidget = (props) => {
   const {
     uiSchema,
@@ -79,7 +81,7 @@ const DateWidget = (props) => {
 
   const hidePicker = () => {
     const currentDate = value || date;
-    const dateToSave = currentDate && moment(new Date(currentDate)).format('MM/DD/YYYY');
+    const dateToSave = currentDate && moment(new Date(currentDate)).format(DATE_FORMAT);
     onWrappedChange(dateToSave);
     if (onBlur) {
       onBlur();
@@ -99,7 +101,7 @@ const DateWidget = (props) => {
         onCancel();
       } else {
         setShow(false);
-        const dateToSave = moment(new Date(selectedDate)).format('MM/DD/YYYY');
+        const dateToSave = moment(new Date(selectedDate)).format(DATE_FORMAT);
         setDate(selectedDate);
         onWrappedChange(dateToSave);
         if (onBlur) {
@@ -108,7 +110,7 @@ const DateWidget = (props) => {
       }
     } else {
       const currentDate = selectedDate || date;
-      const dateToSave = moment(new Date(currentDate)).format('MM/DD/YYYY');
+      const dateToSave = moment(new Date(currentDate)).format(DATE_FORMAT);
       setDate(currentDate);
       onWrappedChange(dateToSave);
     }
