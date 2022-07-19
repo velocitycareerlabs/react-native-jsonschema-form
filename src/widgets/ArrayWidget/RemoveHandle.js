@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, ViewPropTypes } from 'react-native';
+import { StyleSheet, Text, ViewPropTypes, Platform } from 'react-native';
 
 const styles = StyleSheet.create({
   remove: {
