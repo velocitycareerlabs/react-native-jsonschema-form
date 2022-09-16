@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {noop, pick} from 'lodash';
-import { TextInput as RNTextInput, StyleSheet, Platform, ViewPropTypes } from 'react-native';
+import { TextInput as RNTextInput, StyleSheet, Platform } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { useTheme } from '../Theme';
 import { LayoutAnimation } from 'react-native';
 

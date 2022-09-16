@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {StyleSheet, ViewPropTypes} from 'react-native';
+import {StyleSheet} from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
+
 import { withTheme } from '../../Theme';
 import Column from './Column';
 

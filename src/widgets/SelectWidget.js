@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import PropTypes from 'prop-types';
 import ModalDropdown from 'react-native-modal-dropdown';
-import {StyleSheet, Platform, Text, TouchableOpacity, View, ViewPropTypes} from 'react-native';
+import {StyleSheet, Platform, Text, TouchableOpacity, View} from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import Picker from 'react-native-picker';
 import {isArray, isNaN, noop, without} from 'lodash';
 import { useOnChange } from '../utils';

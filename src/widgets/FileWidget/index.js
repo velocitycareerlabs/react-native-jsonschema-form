@@ -5,12 +5,12 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  ViewPropTypes,
   View,
   Platform,
   ActionSheetIOS,
   PermissionsAndroid,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Plus from './plus.svg';
