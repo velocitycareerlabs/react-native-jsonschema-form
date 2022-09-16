@@ -111,10 +111,10 @@ const FileWidget = (props) => {
   };
 
   const onImageReceive = (response) => {
-    const isAssetsWrapped = response &&
-        response.hasOwnProperty('assets') &&
-        Array.isArray(response.assets) &&
-        response.assets[0];
+    const isAssetsWrapped = response
+        && response.hasOwnProperty('assets')
+        && Array.isArray(response.assets)
+        && response.assets[0];
 
     const uri = isAssetsWrapped ? response.assets[0].uri : response.uri;
 

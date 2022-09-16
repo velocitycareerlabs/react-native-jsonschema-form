@@ -19,22 +19,22 @@ const Item = ({
     removable,
     propertyUiSchema,
   } = props;
-  const onRemovePress = useOnRemovePress(props)
+  const onRemovePress = useOnRemovePress(props);
 
   return (
     <React.Fragment>
-        <PropertyField
-            {...props}
-            name={propertyName}
-            schema={propertySchema}
-            uiSchema={{...propertyUiSchema, 'ui:title': `${itemTitle} ${props.index + 1}`}}
-            errors={propertyErrors}
-            value={propertyValue}
-            meta={propertyMeta}
-        />
-        {removable && (RemoveComponent !== RemoveHandle) ? (
-          <RemoveComponent onRemovePress={onRemovePress} {...props} />
-        ) : null}
+      <PropertyField
+        {...props}
+        name={propertyName}
+        schema={propertySchema}
+        uiSchema={{ ...propertyUiSchema, 'ui:title': `${itemTitle} ${props.index + 1}` }}
+        errors={propertyErrors}
+        value={propertyValue}
+        meta={propertyMeta}
+      />
+      {removable && (RemoveComponent !== RemoveHandle) ? (
+        <RemoveComponent onRemovePress={onRemovePress} {...props} />
+      ) : null}
       {removable && RemoveComponent === RemoveHandle ? (
         <RemoveComponent onRemovePress={onRemovePress} {...props} />
       ) : null}
@@ -62,7 +62,7 @@ Item.propTypes = {
 Item.defaultProps = {
   auto: false,
   propertyErrors: undefined,
-  itemTitle: ''
+  itemTitle: '',
 };
 
 export default Item;

@@ -12,13 +12,14 @@ const styles = StyleSheet.create({
     ...Platform.select(
       {
         ios: {
-          color: '#007AFF'
-        }, 
+          color: '#007AFF',
+        },
         android: {
           color: '#7489A8',
-          fontFamily: 'Roboto-Medium'
-        }
-      })
+          fontFamily: 'Roboto-Medium',
+        },
+      },
+    ),
   },
   hidden: {
     opacity: 0,

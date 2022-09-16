@@ -231,13 +231,11 @@ const createGrid = (grid, params) => {
     zIndex: grid.length - i,
     key: `${params.name}-${i}`,
   }));
-  return (props) => {
-    return (
-      <Row>
-        {items.map(GridItem => <GridItem key={GridItem.key} {...props} />)}
-      </Row>
-    );
-  };
+  return props => (
+    <Row>
+      {items.map(GridItem => <GridItem key={GridItem.key} {...props} />)}
+    </Row>
+  );
 };
 
 export default createGrid;

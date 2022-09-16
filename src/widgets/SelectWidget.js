@@ -1,12 +1,16 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ModalDropdown from 'react-native-modal-dropdown';
-import {StyleSheet, Platform, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet, Platform, Text, TouchableOpacity, View,
+} from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import Picker from 'react-native-picker';
-import {isArray, isNaN, noop, without} from 'lodash';
+import {
+  isArray, isNaN, noop, without,
+} from 'lodash';
+import { Icon } from 'react-native-elements';
 import { useOnChange } from '../utils';
-import {Icon} from "react-native-elements";
 
 const styles = StyleSheet.create({
   container: {
@@ -20,7 +24,7 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     width: '100%',
-    marginBottom: 10
+    marginBottom: 10,
   },
   picker: {
     width: '100%',
@@ -36,7 +40,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 20,
     paddingLeft: 10,
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   dropdown: {
     width: '80%',
@@ -46,7 +50,7 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 12,
     fontWeight: '400',
-    color: '#697079'
+    color: '#697079',
   },
 });
 
@@ -76,9 +80,7 @@ const SelectWidget = (props) => {
     onBlur,
   } = props;
 
-  useEffect(() => {
-    return () => Picker.hide();
-  }, []);
+  useEffect(() => () => Picker.hide(), []);
 
   const onChange = useOnChange({ ...props, parser });
 
@@ -89,7 +91,7 @@ const SelectWidget = (props) => {
   const labels = uiSchema['ui:enumNames'] || schema.enumNames || values;
 
   const onTogglePicker = () => {
-    Picker.isPickerShow(status => {
+    Picker.isPickerShow((status) => {
       if (status) {
         Picker.hide();
       } else {
@@ -102,7 +104,7 @@ const SelectWidget = (props) => {
           pickerTitleText: '',
           pickerRowHeight: 40,
           onPickerConfirm,
-          onPickerSelect
+          onPickerSelect,
         });
 
         Picker.show();
@@ -112,12 +114,12 @@ const SelectWidget = (props) => {
     });
   };
 
-  const onPickerConfirm = val => {
+  const onPickerConfirm = (val) => {
     onChange(val[0]);
     onBlur && onBlur();
   };
 
-  const onPickerSelect = val => {
+  const onPickerSelect = (val) => {
     onChange(val[0]);
   };
 
@@ -129,66 +131,67 @@ const SelectWidget = (props) => {
 
   const dropdownHeight = labels.length * 50;
 
-  return Platform.OS === 'ios' ?
-      (
-          <TouchableOpacity
-              style={[
-                styles.container,
-                theme.input.regular.border,
-                hasError ? theme.input.error.border : {},
-                style,
-              ]}
-              onPress={onTogglePicker}
-              activeOpacity={0.7}>
-            {placeholder ?
-                (
-                    <Text style={[theme.input.regular.text, placeholderStyle]}>
-                      {placeholder}
-                    </Text>
-                ) :
-                (
-                    <Text style={theme.input.regular.text}>
-                      {value}
-                    </Text>
-                )}
-            <Icon
-                color="#697079"
-                size={25}
-                name="chevron-down"
-                type="material-community"
-            />
-          </TouchableOpacity>
-      ) :
-      (
-          <ModalDropdown
-              style={styles.pickerContainer}
-              textStyle={[theme.input.regular.text]}
-              dropdownTextStyle={[theme.input.regular.text, styles.item]}
-              dropdownStyle={[styles.dropdown, {height: dropdownHeight > 200 ? 200 : dropdownHeight}]}
-              options={labels}
-              onSelect={onSelect}
-              renderSeparator={() => <View />}
-          >
-            <View style={[styles.picker, theme.input.regular.border, hasError ? theme.input.error.border : {}, style]}>
-              {placeholder ?
-                  (
-                      <Text style={[theme.input.regular.text, placeholderStyle]}>
-                        {placeholder}
-                      </Text>
-                  ) :
-                  (
-                      <Text style={theme.input.regular.text}>
-                        {value}
-                      </Text>
-                  )}
-              <Icon
-                  color="#697079"
-                  size={25}
-                  name="chevron-down"
-                  type="material-community"
-              />
-            </View>
-          </ModalDropdown>
+  return Platform.OS === 'ios'
+    ? (
+      <TouchableOpacity
+        style={[
+          styles.container,
+          theme.input.regular.border,
+          hasError ? theme.input.error.border : {},
+          style,
+        ]}
+        onPress={onTogglePicker}
+        activeOpacity={0.7}
+      >
+        {placeholder
+          ? (
+            <Text style={[theme.input.regular.text, placeholderStyle]}>
+              {placeholder}
+            </Text>
+          )
+          : (
+            <Text style={theme.input.regular.text}>
+              {value}
+            </Text>
+          )}
+        <Icon
+          color="#697079"
+          size={25}
+          name="chevron-down"
+          type="material-community"
+        />
+      </TouchableOpacity>
+    )
+    : (
+      <ModalDropdown
+        style={styles.pickerContainer}
+        textStyle={[theme.input.regular.text]}
+        dropdownTextStyle={[theme.input.regular.text, styles.item]}
+        dropdownStyle={[styles.dropdown, { height: dropdownHeight > 200 ? 200 : dropdownHeight }]}
+        options={labels}
+        onSelect={onSelect}
+        renderSeparator={() => <View />}
+      >
+        <View style={[styles.picker, theme.input.regular.border, hasError ? theme.input.error.border : {}, style]}>
+          {placeholder
+            ? (
+              <Text style={[theme.input.regular.text, placeholderStyle]}>
+                {placeholder}
+              </Text>
+            )
+            : (
+              <Text style={theme.input.regular.text}>
+                {value}
+              </Text>
+            )}
+          <Icon
+            color="#697079"
+            size={25}
+            name="chevron-down"
+            type="material-community"
+          />
+        </View>
+      </ModalDropdown>
     );
 };
 

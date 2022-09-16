@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   container: {
-    marginTop: 10
+    marginTop: 10,
   },
   first: {
     marginTop: -10,
@@ -43,11 +43,11 @@ const ErrorWidget = ({
     style.push(styles.last);
   }
   return (
-      <View style={styles.container}>
-        <Text style={[style, auto ? styles.auto : null]}>
-          {children}
-        </Text>
-      </View>
+    <View style={styles.container}>
+      <Text style={[style, auto ? styles.auto : null]}>
+        {children}
+      </Text>
+    </View>
 
   );
 };

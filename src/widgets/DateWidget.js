@@ -181,8 +181,9 @@ const DateWidget = (props) => {
           styles.pickerContainer,
           rightPicker,
           theme.input.regular.border,
-          hasError ? theme.input.error.border : {}
-        ]}>
+          hasError ? theme.input.error.border : {},
+        ]}
+        >
           {Platform.OS === 'ios'
             ? (
               <View style={[styles.buttonBlock, theme.input.regular.border]}>

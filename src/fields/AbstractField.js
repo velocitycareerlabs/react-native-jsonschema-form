@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import PropTypes from 'prop-types';
-import {last, isArray, isString, noop} from 'lodash';
+import {
+  last, isArray, isString, noop,
+} from 'lodash';
 import {
   getComponent,
   getTitle,
@@ -29,17 +31,17 @@ const styles = StyleSheet.create({
   },
   leftRow: {
     paddingRight: 8,
-    paddingLeft: 32
+    paddingLeft: 32,
   },
   rightRow: {
     paddingLeft: 8,
   },
   fullRow: {
-    paddingHorizontal: 24
+    paddingHorizontal: 24,
   },
   label: {
     paddingTop: 3,
-  }
+  },
 });
 
 class AbstractField extends React.Component {
@@ -47,7 +49,7 @@ class AbstractField extends React.Component {
     super(props);
 
     this.state = {
-      inFocus: false
+      inFocus: false,
     };
   }
 
@@ -83,16 +85,18 @@ class AbstractField extends React.Component {
   };
 
   shouldComponentUpdate(nextProps, nextState) {
-    const { clearCache, update, name, activeField } = nextProps;
+    const {
+      clearCache, update, name, activeField,
+    } = nextProps;
     const { inFocus } = nextState;
     return (
-        name === '' ||
-        clearCache ||
-        update === 'all' ||
-        update[name] ||
-        inFocus !== this.state.inFocus ||
-        this.props.activeField !== activeField ||
-        false
+      name === ''
+        || clearCache
+        || update === 'all'
+        || update[name]
+        || inFocus !== this.state.inFocus
+        || this.props.activeField !== activeField
+        || false
     );
   }
 
@@ -101,7 +105,9 @@ class AbstractField extends React.Component {
   }
 
   renderErrors() {
-    const { widgets, uiSchema, errors, schema } = this.props;
+    const {
+      widgets, uiSchema, errors, schema,
+    } = this.props;
 
     const { ErrorWidget } = widgets;
     const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
@@ -115,7 +121,7 @@ class AbstractField extends React.Component {
         first={i === 0}
         last={i === errors.length - 1}
         auto={uiSchema['ui:inline']}
-        style={{...leftRow, ...rightRow, ...fullRow}}
+        style={{ ...leftRow, ...rightRow, ...fullRow }}
         {...(uiSchema['ui:errorProps'] || {})}
       >
         {error}
@@ -164,7 +170,9 @@ class AbstractField extends React.Component {
         hasTitle={hasTitle}
         hasError={hasError}
         auto={uiSchema['ui:inline']}
-        style={{...leftRow, ...rightRow, ...fullRow, ...styles.label}}
+        style={{
+          ...leftRow, ...rightRow, ...fullRow, ...styles.label,
+        }}
         {...(uiSchema['ui:titleProps'] || {})}
       >
         {title}
@@ -186,7 +194,7 @@ class AbstractField extends React.Component {
       return '';
     }
     const hasTitle = !(
-        noTitle
+      noTitle
         || uiSchema['ui:title'] === false
         || schema.type === 'object'
         || this.cache === ArrayWidget
@@ -202,15 +210,15 @@ class AbstractField extends React.Component {
   }
 
   onFocus = () => {
-    const {onFocus} = this.props;
+    const { onFocus } = this.props;
     if (onFocus) {
       onFocus();
     }
-    this.setState(() => ({inFocus: true}));
+    this.setState(() => ({ inFocus: true }));
   };
 
   onBlur = () => {
-    this.setState(() => ({inFocus: false}));
+    this.setState(() => ({ inFocus: false }));
   };
 
   render() {
