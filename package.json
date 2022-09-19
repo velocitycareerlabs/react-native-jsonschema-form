@@ -11,11 +11,18 @@
     "cloc:test": "yarn cloc ./__tests__",
     "cloc:all": "yarn cloc ./"
   },
-  "author": "Yury Kurets <yura.kurets@aetsoft.by>",
+  "author": "Michael Avoyan <michael.avoyan@velocitycareerlabs.com> (https://github.com/velocitycareerlabs)",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/velocitycareerlabs/react-native-jsonschema-form"
+  },
+  "bugs": {
+    "url": "https://github.com/velocitycareerlabs/react-native-jsonschema-form/issues"
+  },
+  "homepage": "https://github.com/velocitycareerlabs/react-native-jsonschema-form#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
     "@babel/cli": "7.11.6",
