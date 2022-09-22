@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button} from 'react-native';
+import { Button } from 'react-native';
 import PropTypes from 'prop-types';
 import { withTheme } from './Theme';
 

@@ -6,11 +6,13 @@ import {
   times,
   isArray,
   isFunction,
-  isEmpty
+  isEmpty,
 } from 'lodash';
-import {Text, View, TouchableOpacity, StyleSheet, Platform} from 'react-native';
+import {
+  Text, View, TouchableOpacity, StyleSheet, Platform,
+} from 'react-native';
 import { titleize } from 'underscore.string';
-import {Icon} from 'react-native-elements';
+import { Icon } from 'react-native-elements';
 import {
   getTitle,
   getComponent,
@@ -111,7 +113,7 @@ const getProps = (props) => {
     OrderComponent: options.OrderComponent || OrderHandle,
     RemoveComponent: options.RemoveComponent || RemoveHandle,
     ItemComponent: options.ItemComponent || Item,
-    itemTitle: formatTitle(itemTitle)
+    itemTitle: formatTitle(itemTitle),
   };
   return { ...props, ...extraProps };
 };
@@ -174,9 +176,9 @@ const useReorder = ({ review, setState }) => () => setState({
 });
 
 const onChangeText = (props, val, index) => {
-  const nextValue = isEmpty(props.value) ? [val] : map(props.value, (item, key) => index === key ? val : item);
-  props.onChange(nextValue, props.activeField)
-}
+  const nextValue = isEmpty(props.value) ? [val] : map(props.value, (item, key) => (index === key ? val : item));
+  props.onChange(nextValue, props.activeField);
+};
 
 const ArrayWidget = (props) => {
   const [state, setState] = useState({
@@ -204,7 +206,7 @@ const ArrayWidget = (props) => {
     errors,
     propertyUiSchema,
     ItemComponent,
-    theme
+    theme,
   } = params;
 
   const hasError = isArray(errors) && errors.length > 0 && !errors.hidden;
@@ -212,40 +214,41 @@ const ArrayWidget = (props) => {
   const toggleable = !!uiSchema['ui:toggleable'];
 
   const addComponent = (
-      <TouchableOpacity style={styles.icon} activeOpacity={1} onPress={onAdd}>
-        <Icon
-            color="#FFF"
-            size={16}
-            name="plus"
-            type="material-community"
-        />
-      </TouchableOpacity>
+    <TouchableOpacity style={styles.icon} activeOpacity={1} onPress={onAdd}>
+      <Icon
+        color="#FFF"
+        size={16}
+        name="plus"
+        type="material-community"
+      />
+    </TouchableOpacity>
   );
 
   return (
     <React.Fragment>
-      {isEmpty(value) || hasTitle || toggleable ?
-          (
-              <View
-                  style={[
-                    styles.inputTextContainer,
-                    theme.input.regular.border
-                  ]}
-              >
-                {hasTitle ?
-                    (
-                        <Text style={[
-                            theme.input.regular.text,
-                            theme.input.regular.placeholder,
-                            hasError && {color: theme.input.error.placeholder.color}
-                        ]}>
-                          {title}
-                        </Text>
-                    ) :
-                    null}
-                {addComponent}
-              </View>
-          ) : null}
+      {isEmpty(value) || hasTitle || toggleable
+        ? (
+          <View
+            style={[
+              styles.inputTextContainer,
+              theme.input.regular.border,
+            ]}
+          >
+            {hasTitle
+              ? (
+                <Text style={[
+                  theme.input.regular.text,
+                  theme.input.regular.placeholder,
+                  hasError && { color: theme.input.error.placeholder.color },
+                ]}
+                >
+                  {title}
+                </Text>
+              )
+              : null}
+            {addComponent}
+          </View>
+        ) : null}
       {times(value.length, (index) => {
         const itemUiSchema = adjustUiSchema(propertyUiSchema, index, params);
         return (
@@ -259,9 +262,9 @@ const ArrayWidget = (props) => {
             propertyErrors={errors && errors[index]}
             propertyUiSchema={itemUiSchema}
             index={index}
-            onChangeText={(val) => onChangeText(params, val, index)}
+            onChangeText={val => onChangeText(params, val, index)}
             withoutHorizontalPadding
-      />
+          />
         );
       })}
     </React.Fragment>
@@ -273,7 +276,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   inputTextContainer: {
     flexDirection: 'row',
@@ -290,8 +293,8 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     justifyContent: 'center',
     alignItems: 'center',
-    ...Platform.select({ios: {backgroundColor: '#000000'}, android: {backgroundColor: '#7489A8'}})
-  }
+    ...Platform.select({ ios: { backgroundColor: '#000000' }, android: { backgroundColor: '#7489A8' } }),
+  },
 });
 
 export default ArrayWidget;

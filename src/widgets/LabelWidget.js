@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, Text, ViewPropTypes } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { pick, omit } from 'lodash';
 import { useTheme } from '../Theme';
 import { viewStyleKeys } from '../utils';
@@ -55,14 +56,9 @@ const LabelWidget = (preProps) => {
     style,
     hasError,
     label,
-    meta,
     auto,
     hasTitle,
-    toggleable,
   } = props;
-
-  const onCheckboxPress = useOnPress(props);
-
   const currentContainerStyle = [
     styles.container,
     auto ? null : styles.fullWidth,

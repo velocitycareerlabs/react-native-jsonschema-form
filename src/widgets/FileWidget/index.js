@@ -5,12 +5,12 @@ import {
   Image,
   TouchableOpacity,
   Text,
-  ViewPropTypes,
   View,
   Platform,
   ActionSheetIOS,
   PermissionsAndroid,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Plus from './plus.svg';
@@ -111,10 +111,10 @@ const FileWidget = (props) => {
   };
 
   const onImageReceive = (response) => {
-    const isAssetsWrapped = response &&
-        response.hasOwnProperty('assets') &&
-        Array.isArray(response.assets) &&
-        response.assets[0];
+    const isAssetsWrapped = response
+        && response.hasOwnProperty('assets')
+        && Array.isArray(response.assets)
+        && response.assets[0];
 
     const uri = isAssetsWrapped ? response.assets[0].uri : response.uri;
 

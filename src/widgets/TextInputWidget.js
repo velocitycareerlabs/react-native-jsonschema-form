@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Platform, ViewPropTypes } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import { noop, isString, isFunction } from 'lodash';
 import { isEmpty, formatMask } from '../utils';
 import TextInput from './TextInput';

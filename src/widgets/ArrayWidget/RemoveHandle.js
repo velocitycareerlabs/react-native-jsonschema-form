@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, ViewPropTypes, Platform } from 'react-native';
+import { StyleSheet, Text, Platform } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 
 const styles = StyleSheet.create({
   remove: {
@@ -11,13 +12,14 @@ const styles = StyleSheet.create({
     ...Platform.select(
       {
         ios: {
-          color: '#007AFF'
-        }, 
+          color: '#007AFF',
+        },
         android: {
           color: '#7489A8',
-          fontFamily: 'Roboto-Medium'
-        }
-      })
+          fontFamily: 'Roboto-Medium',
+        },
+      },
+    ),
   },
   hidden: {
     opacity: 0,

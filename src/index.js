@@ -1,8 +1,9 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, Platform, Keyboard, View, ViewPropTypes,
+  StyleSheet, Platform, Keyboard, View,
 } from 'react-native';
+import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import {
   set,
   get,
@@ -493,7 +494,6 @@ class JsonSchemaForm extends React.Component {
       CancelButton,
       submitButton,
       SubmitButton,
-      buttonPosition,
       customSubmitButton,
     } = this.props;
 
