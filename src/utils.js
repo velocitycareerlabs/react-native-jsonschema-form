@@ -403,6 +403,23 @@ export const getRequired = (schema, prefix = '') => {
   return required;
 };
 
+export const getRequiredAndNotHiddenFields = (requiredFileds, uiSchema) => {
+  return Object.keys(requiredFileds || {}).reduce((acc, key) => {
+    const uiSchemaForKey = key.split('.').reduce((acc, subKey) => {
+      if((acc.uiSchema[subKey] || {})['ui:widget'] === 'hidden') {
+        return { ...acc, ...{uiSchema: acc.uiSchema[subKey], subKeyRequired: false} }
+      }
+      return { ...acc, ...{uiSchema: acc.uiSchema[subKey]} }
+    }, {uiSchema, subKeyRequired: true})
+
+    if(uiSchemaForKey.subKeyRequired) {
+      return { ...acc, [key]: true}
+    }
+
+    return acc;
+  }, {});
+}
+
 const maskOptions = {
   undefined: /^$/,
   a: /^[A-Za-zÀ-ÖØ-öø-ÿ]$/,
