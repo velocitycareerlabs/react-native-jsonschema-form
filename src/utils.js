@@ -409,7 +409,7 @@ export const getRequiredAndNotHiddenFields = (requiredFileds, uiSchema) => {
       if((acc.uiSchema[subKey] || {})['ui:widget'] === 'hidden') {
         return { ...acc, ...{ uiSchema: acc.uiSchema[subKey] || {}, subKeyRequired: false} }
       }
-      return { ...acc, ...{ uiSchema: acc.uiSchema[subKey]} || {} }
+      return { ...acc, ...{ uiSchema: acc.uiSchema[subKey] || {} } }
     }, {uiSchema, subKeyRequired: true})
 
     if(uiSchemaForKey.subKeyRequired) {
