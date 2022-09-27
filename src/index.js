@@ -1,7 +1,7 @@
 import React, { isValidElement, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import {
-  StyleSheet, Platform, Keyboard, View,
+  StyleSheet, Platform, Keyboard, View, Text,
 } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
 import {
@@ -23,6 +23,7 @@ import {
   getValues,
   getErrors,
   getRequired,
+  getRequiredAndNotHiddenFields,
   getStructure,
   getExceptions,
   normalized,
@@ -222,6 +223,7 @@ class JsonSchemaForm extends React.Component {
     const errors = getErrors(cloneDeep(errorSchema), structure.schema);
     const metas = getMetas(cloneDeep(metaSchema || values), structure.schema, structure.uiSchema);
     const required = getRequired(structure.schema);
+    const requiredAndNotHiddenFields = getRequiredAndNotHiddenFields(required, structure.uiSchema );
 
     if (onInit) {
       onInit({ values });
@@ -232,6 +234,7 @@ class JsonSchemaForm extends React.Component {
       errors,
       metas,
       required,
+      requiredAndNotHiddenFields,
       schema: structure.schema,
       uiSchema: structure.uiSchema,
       formDataProp: formData,
@@ -297,6 +300,10 @@ class JsonSchemaForm extends React.Component {
       update: [name].concat(update),
     });
 
+    this.setState({
+      isSubmitError: false,
+    });
+
     this.run(onChange(event), () => {
       if (!event.isDefaultPrevented()) {
         const { path } = event.params;
@@ -347,12 +354,32 @@ class JsonSchemaForm extends React.Component {
       Keyboard.dismiss();
     }
     setTimeout(() => {
-      const { metas, values } = this.state;
+      const { uiSchema, metas, values, requiredAndNotHiddenFields } = this.state;
       const { onSubmit, filterEmptyValues } = this.props;
       let nextValues = this.filterDisabled(values, metas);
       if (filterEmptyValues) {
         nextValues = this.filterEmpty(nextValues);
       }
+
+      const isAllRequiredFieldsFilled = Object.keys(requiredAndNotHiddenFields || {}).reduce((acc, key) => {
+        const value = key.split('.').reduce((acc, subKey) => {
+          return { values: acc.values[subKey], visibilityValues: acc.visibilityValues[subKey] }} , { values: nextValues, visibilityValues: uiSchema }
+        )
+        const isNotAllVisibleFieldFilled = !(value.values ?? true) && (value.visibilityValues || {})['ui:widget'] !== 'hidden';
+
+        if (isNotAllVisibleFieldFilled) {
+          return false;
+        }
+        return acc;
+      }, true);
+
+      if (!isAllRequiredFieldsFilled) {
+        this.setState({
+          isSubmitError: true,
+        });
+        return;
+      }
+
       const event = new FormEvent('submit', { values: nextValues });
       this.run(onSubmit(event), (response) => {
         if (!event.isDefaultPrevented()) {
@@ -486,6 +513,7 @@ class JsonSchemaForm extends React.Component {
       required,
       clearCache,
       activeField,
+      isSubmitError,
     } = this.state;
 
     const {
@@ -525,6 +553,7 @@ class JsonSchemaForm extends React.Component {
             activeField={activeField}
           />
         </View>
+        {!!isSubmitError && <Text style={formStyles.error}>Please fill all required fields.</Text>}
         {children || (submitButton === false && cancelButton === false) ? children : (
           <>
             {cancelButton ? (
@@ -564,6 +593,7 @@ const formStyles = StyleSheet.create({
       height: 0,
       width: 0,
     },
+    marginBottom: 25,
     ...Platform.select({
       android: {
         borderRadius: 4,
@@ -571,4 +601,7 @@ const formStyles = StyleSheet.create({
       },
     }),
   },
+  error: {
+    color: '#FF2D55',
+  }
 });
