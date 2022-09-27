@@ -407,9 +407,9 @@ export const getRequiredAndNotHiddenFields = (requiredFileds, uiSchema) => {
   return Object.keys(requiredFileds || {}).reduce((acc, key) => {
     const uiSchemaForKey = key.split('.').reduce((acc, subKey) => {
       if((acc.uiSchema[subKey] || {})['ui:widget'] === 'hidden') {
-        return { ...acc, ...{uiSchema: acc.uiSchema[subKey], subKeyRequired: false} }
+        return { ...acc, ...{ uiSchema: acc.uiSchema[subKey] || {}, subKeyRequired: false} }
       }
-      return { ...acc, ...{uiSchema: acc.uiSchema[subKey]} }
+      return { ...acc, ...{ uiSchema: acc.uiSchema[subKey]} || {} }
     }, {uiSchema, subKeyRequired: true})
 
     if(uiSchemaForKey.subKeyRequired) {
