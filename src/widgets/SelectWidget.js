@@ -169,6 +169,7 @@ const SelectWidget = (props) => {
         dropdownTextStyle={[theme.input.regular.text, styles.item]}
         dropdownStyle={[styles.dropdown, { height: dropdownHeight > 200 ? 200 : dropdownHeight }]}
         options={labels}
+        dropdownListProps={{}}
         onSelect={onSelect}
         renderSeparator={() => <View />}
       >
