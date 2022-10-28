@@ -81,7 +81,7 @@ const DateWidget = (props) => {
 
   const hidePicker = () => {
     const currentDate = value || date;
-    const dateToSave = currentDate && moment(new Date(currentDate)).format(DATE_FORMAT);
+    const dateToSave = currentDate && moment(new Date(currentDate)).utc().format(DATE_FORMAT);
     onWrappedChange(dateToSave);
     if (onBlur) {
       onBlur();
@@ -101,7 +101,7 @@ const DateWidget = (props) => {
         onCancel();
       } else {
         setShow(false);
-        const dateToSave = moment(new Date(selectedDate)).format(DATE_FORMAT);
+        const dateToSave = moment(new Date(selectedDate)).utc().format(DATE_FORMAT);
         setDate(selectedDate);
         onWrappedChange(dateToSave);
         if (onBlur) {
@@ -110,7 +110,7 @@ const DateWidget = (props) => {
       }
     } else {
       const currentDate = selectedDate || date;
-      const dateToSave = moment(new Date(currentDate)).format(DATE_FORMAT);
+      const dateToSave = moment(new Date(currentDate)).utc().format(DATE_FORMAT);
       setDate(currentDate);
       onWrappedChange(dateToSave);
     }
@@ -147,11 +147,13 @@ const DateWidget = (props) => {
   };
 
   const formattedValue = (value || date)
-    ? moment(new Date(value || date)).format(uiSchema['ui:dateFormat'] || 'MMM YYYY')
+    ? moment(new Date(value || date)).utc().format(uiSchema['ui:dateFormat'] || 'DD MMM YYYY')
     : '';
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
   const rightPicker = rightRow ? styles.rightPicker : {};
+
+  const pickerValue = moment(new Date(value || date)).utc();
 
   return (
     <View style={styles.container}>
@@ -202,12 +204,13 @@ const DateWidget = (props) => {
             : null}
           <DateTimePicker
             testID="dateTimePicker"
-            value={new Date(value || date)}
+            value={new Date(pickerValue)}
             minimumDate={uiSchema['ui:minDate'] || MIN_DATE}
             maximumDate={uiSchema['ui:maxDate'] || MAX_DATE}
             onChange={onChange}
             display={Platform.OS !== 'ios' ? 'default' : 'spinner'}
             themeVariant="light"
+            timeZoneOffsetInMinutes={0}
           />
         </View>
       )}
