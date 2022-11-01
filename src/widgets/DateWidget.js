@@ -58,6 +58,15 @@ const styles = StyleSheet.create({
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
+const parseDateOnlyStringToLocalDate = (dateOnlyStrings) => {
+  if (!dateOnlyStrings) {
+    return null;
+  }
+
+  const [year, month, day] = dateOnlyStrings.split('-');
+  return new Date(+year, +month - 1, +day, 0, 0, 0);
+}
+
 const DateWidget = (props) => {
   const {
     uiSchema,
@@ -78,10 +87,11 @@ const DateWidget = (props) => {
   const [show, setShow] = useState(false);
   const onWrappedChange = useOnChange(props);
   const prevActiveField = usePrevious(activeField);
+  const localDateValue = parseDateOnlyStringToLocalDate(value);
 
   const hidePicker = () => {
-    const currentDate = value || date;
-    const dateToSave = currentDate && moment(new Date(currentDate)).utc().format(DATE_FORMAT);
+    const currentDate = localDateValue || ( date && new Date(date) );
+    const dateToSave = currentDate && moment(currentDate).format(DATE_FORMAT);
     onWrappedChange(dateToSave);
     if (onBlur) {
       onBlur();
@@ -101,7 +111,7 @@ const DateWidget = (props) => {
         onCancel();
       } else {
         setShow(false);
-        const dateToSave = moment(new Date(selectedDate)).utc().format(DATE_FORMAT);
+        const dateToSave = moment(new Date(selectedDate)).format(DATE_FORMAT);
         setDate(selectedDate);
         onWrappedChange(dateToSave);
         if (onBlur) {
@@ -110,7 +120,7 @@ const DateWidget = (props) => {
       }
     } else {
       const currentDate = selectedDate || date;
-      const dateToSave = moment(new Date(currentDate)).utc().format(DATE_FORMAT);
+      const dateToSave = moment(new Date(currentDate)).format(DATE_FORMAT);
       setDate(currentDate);
       onWrappedChange(dateToSave);
     }
@@ -145,15 +155,15 @@ const DateWidget = (props) => {
       onBlur();
     }
   };
+  const pickerValue =  localDateValue || ( date && new Date(date) );
 
-  const formattedValue = (value || date)
-    ? moment(new Date(value || date)).utc().format(uiSchema['ui:dateFormat'] || 'DD MMM YYYY')
-    : '';
+  const formattedValue = pickerValue
+      ? moment(pickerValue).format(uiSchema['ui:dateFormat'] || 'DD MMM YYYY')
+      : '';
+
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
   const rightPicker = rightRow ? styles.rightPicker : {};
-
-  const pickerValue = moment(new Date(value || date)).utc();
 
   return (
     <View style={styles.container}>
@@ -204,13 +214,12 @@ const DateWidget = (props) => {
             : null}
           <DateTimePicker
             testID="dateTimePicker"
-            value={new Date(pickerValue)}
+            value={pickerValue}
             minimumDate={uiSchema['ui:minDate'] || MIN_DATE}
             maximumDate={uiSchema['ui:maxDate'] || MAX_DATE}
             onChange={onChange}
             display={Platform.OS !== 'ios' ? 'default' : 'spinner'}
             themeVariant="light"
-            timeZoneOffsetInMinutes={0}
           />
         </View>
       )}
