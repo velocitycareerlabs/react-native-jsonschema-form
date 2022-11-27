@@ -555,15 +555,17 @@ class JsonSchemaForm extends React.Component {
         </View>
         {!!isSubmitError && <Text style={formStyles.error}>Please fill all required fields.</Text>}
         {children || (submitButton === false && cancelButton === false) ? children : (
-          <>
+          <View style={formStyles.buttonsBlock}>
             {cancelButton ? (
               <CancelButton
                 onPress={this.onCancel}
+                style={{marginRight:5}}
                 text={isString(cancelButton) ? cancelButton : 'Cancel'}
               />
             ) : null}
             {submitButton && !customSubmitButton ? (
               <SubmitButton
+                style={{marginLeft:5}}
                 onPress={this.onSubmit}
                 text={isString(submitButton) ? submitButton : 'Submit'}
               />
@@ -603,5 +605,11 @@ const formStyles = StyleSheet.create({
   },
   error: {
     color: '#FF2D55',
-  }
+  },
+  buttonsBlock:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 25,
+    marginTop: 25
+  },
 });
