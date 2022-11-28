@@ -559,13 +559,13 @@ class JsonSchemaForm extends React.Component {
             {cancelButton ? (
               <CancelButton
                 onPress={this.onCancel}
-                style={{marginRight:5}}
+                style={formStyles.buttonLeft}
                 text={isString(cancelButton) ? cancelButton : 'Cancel'}
               />
             ) : null}
             {submitButton && !customSubmitButton ? (
               <SubmitButton
-                style={{marginLeft:5}}
+                style={formStyles.buttonRight}
                 onPress={this.onSubmit}
                 text={isString(submitButton) ? submitButton : 'Submit'}
               />
@@ -573,7 +573,7 @@ class JsonSchemaForm extends React.Component {
             {isValidElement(customSubmitButton)
               ? cloneElement(customSubmitButton, { onPress: this.onSubmit })
               : null}
-          </>
+          </View>
         )}
       </React.Fragment>
     );
@@ -612,4 +612,10 @@ const formStyles = StyleSheet.create({
     marginBottom: 25,
     marginTop: 25
   },
+  buttonLeft:{
+    marginRight: 5
+  },
+  buttonRight:{
+    marginLeft: 5
+  }
 });
