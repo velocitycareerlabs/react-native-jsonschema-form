@@ -223,7 +223,7 @@ class JsonSchemaForm extends React.Component {
     const errors = getErrors(cloneDeep(errorSchema), structure.schema);
     const metas = getMetas(cloneDeep(metaSchema || values), structure.schema, structure.uiSchema);
     const required = getRequired(structure.schema);
-    const requiredAndNotHiddenFields = getRequiredAndNotHiddenFields(required, structure.uiSchema );
+    const requiredAndNotHiddenFields = getRequiredAndNotHiddenFields(required, structure.uiSchema);
 
     if (onInit) {
       onInit({ values });
@@ -354,17 +354,23 @@ class JsonSchemaForm extends React.Component {
       Keyboard.dismiss();
     }
     setTimeout(() => {
-      const { uiSchema, metas, values, requiredAndNotHiddenFields } = this.state;
+      const {
+        uiSchema, metas, values, requiredAndNotHiddenFields,
+      } = this.state;
       const { onSubmit, filterEmptyValues } = this.props;
       let nextValues = this.filterDisabled(values, metas);
       if (filterEmptyValues) {
         nextValues = this.filterEmpty(nextValues);
       }
 
+      // eslint-disable-next-line max-len
       const isAllRequiredFieldsFilled = Object.keys(requiredAndNotHiddenFields || {}).reduce((acc, key) => {
-        const value = key.split('.').reduce((acc, subKey) => {
-          return { values: acc.values[subKey], visibilityValues: acc.visibilityValues[subKey] }} , { values: nextValues, visibilityValues: uiSchema }
-        )
+        const value = key.split('.').reduce((subAcc, subKey) => (
+          {
+            values: (subAcc.values || {})[subKey],
+            visibilityValues: (subAcc.visibilityValues || {})[subKey],
+          }),
+        { values: nextValues, visibilityValues: uiSchema });
         const isNotAllVisibleFieldFilled = !(value.values ?? true) && (value.visibilityValues || {})['ui:widget'] !== 'hidden';
 
         if (isNotAllVisibleFieldFilled) {
@@ -603,5 +609,5 @@ const formStyles = StyleSheet.create({
   },
   error: {
     color: '#FF2D55',
-  }
+  },
 });
