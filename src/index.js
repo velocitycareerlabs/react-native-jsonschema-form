@@ -561,15 +561,17 @@ class JsonSchemaForm extends React.Component {
         </View>
         {!!isSubmitError && <Text style={formStyles.error}>Please fill all required fields.</Text>}
         {children || (submitButton === false && cancelButton === false) ? children : (
-          <>
+          <View style={formStyles.buttonsBlock}>
             {cancelButton ? (
               <CancelButton
                 onPress={this.onCancel}
+                style={formStyles.buttonLeft}
                 text={isString(cancelButton) ? cancelButton : 'Cancel'}
               />
             ) : null}
             {submitButton && !customSubmitButton ? (
               <SubmitButton
+                style={formStyles.buttonRight}
                 onPress={this.onSubmit}
                 text={isString(submitButton) ? submitButton : 'Submit'}
               />
@@ -577,7 +579,7 @@ class JsonSchemaForm extends React.Component {
             {isValidElement(customSubmitButton)
               ? cloneElement(customSubmitButton, { onPress: this.onSubmit })
               : null}
-          </>
+          </View>
         )}
       </React.Fragment>
     );
@@ -610,4 +612,16 @@ const formStyles = StyleSheet.create({
   error: {
     color: '#FF2D55',
   },
+  buttonsBlock:{
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 25,
+    marginTop: 25
+  },
+  buttonLeft:{
+    marginRight: 5
+  },
+  buttonRight:{
+    marginLeft: 5
+  }
 });
