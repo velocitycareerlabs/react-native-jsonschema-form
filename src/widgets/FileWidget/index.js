@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -104,6 +105,7 @@ const FileWidget = (props) => {
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
         console.warn(err);
+        // eslint-disable-next-line no-alert
         alert('Write permission err', err);
       }
       return false;
@@ -112,7 +114,7 @@ const FileWidget = (props) => {
 
   const onImageReceive = (response) => {
     const isAssetsWrapped = response
-        && response.hasOwnProperty('assets')
+        && Object.prototype.hasOwnProperty.call(response, 'assets')
         && Array.isArray(response.assets)
         && response.assets[0];
 
@@ -269,11 +271,14 @@ FileWidget.propTypes = {
   hasError: PropTypes.bool.isRequired,
   style: ViewPropTypes.style,
   placeholder: PropTypes.string,
+  value: PropTypes.string,
+  onChange: PropTypes.func.isRequired,
 };
 
 FileWidget.defaultProps = {
   placeholder: '',
   style: {},
+  value: '',
 };
 
 export default FileWidget;

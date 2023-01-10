@@ -18,6 +18,7 @@ const Item = ({
   const {
     removable,
     propertyUiSchema,
+    index,
   } = props;
   const onRemovePress = useOnRemovePress(props);
 
@@ -27,7 +28,7 @@ const Item = ({
         {...props}
         name={propertyName}
         schema={propertySchema}
-        uiSchema={{ ...propertyUiSchema, 'ui:title': `${itemTitle} ${props.index + 1}` }}
+        uiSchema={{ ...propertyUiSchema, 'ui:title': `${itemTitle} ${index + 1}` }}
         errors={propertyErrors}
         value={propertyValue}
         meta={propertyMeta}

@@ -45,14 +45,6 @@ const styles = StyleSheet.create({
 });
 
 class AbstractField extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      inFocus: false,
-    };
-  }
-
   static propTypes = {
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
@@ -84,18 +76,28 @@ class AbstractField extends React.Component {
     onFocus: noop,
   };
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      inFocus: false,
+    };
+  }
+
   shouldComponentUpdate(nextProps, nextState) {
     const {
       clearCache, update, name, activeField,
     } = nextProps;
     const { inFocus } = nextState;
+    const { inFocus: currentInFocus } = this.state;
+    const { activeField: currentActiveField } = this.props;
     return (
       name === ''
         || clearCache
         || update === 'all'
         || update[name]
-        || inFocus !== this.state.inFocus
-        || this.props.activeField !== activeField
+        || inFocus !== currentInFocus
+        || currentActiveField !== activeField
         || false
     );
   }
@@ -104,30 +106,46 @@ class AbstractField extends React.Component {
     throw new Error('Abstract field cannot be used.');
   }
 
-  renderErrors() {
+  getPlaceholder(params) {
     const {
-      widgets, uiSchema, errors, schema,
+      name,
+      schema,
+      uiSchema,
+      noTitle,
+      required,
+      value,
     } = this.props;
-
-    const { ErrorWidget } = widgets;
-    const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
-    const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
-    const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
-
-    return errors.filter(isString).map((error, i) => (
-      <ErrorWidget
-        uiSchema={uiSchema}
-        key={error}
-        first={i === 0}
-        last={i === errors.length - 1}
-        auto={uiSchema['ui:inline']}
-        style={{ ...leftRow, ...rightRow, ...fullRow }}
-        {...(uiSchema['ui:errorProps'] || {})}
-      >
-        {error}
-      </ErrorWidget>
-    ));
+    const { inFocus } = this.state;
+    if (inFocus || value) {
+      return '';
+    }
+    const hasTitle = !(
+      noTitle
+        || uiSchema['ui:title'] === false
+        || schema.type === 'object'
+        || this.cache === ArrayWidget
+    );
+    if (!uiSchema['ui:toggleable'] && !hasTitle) {
+      return '';
+    }
+    let title = getTitle(uiSchema['ui:title'] || FIELD_TITLE, params);
+    if (required[toPath(name, '[]')]) {
+      title += '*';
+    }
+    return title;
   }
+
+  onFocus = () => {
+    const { onFocus } = this.props;
+    if (onFocus) {
+      onFocus();
+    }
+    this.setState(() => ({ inFocus: true }));
+  };
+
+  onBlur = () => {
+    this.setState(() => ({ inFocus: false }));
+  };
 
   renderTitle(hasError, params) {
     const {
@@ -180,50 +198,33 @@ class AbstractField extends React.Component {
     );
   }
 
-  getPlaceholder(params) {
+  renderErrors() {
     const {
-      name,
-      schema,
-      uiSchema,
-      noTitle,
-      required,
-      value,
+      widgets, uiSchema, errors, schema,
     } = this.props;
-    const { inFocus } = this.state;
-    if (inFocus || value) {
-      return '';
-    }
-    const hasTitle = !(
-      noTitle
-        || uiSchema['ui:title'] === false
-        || schema.type === 'object'
-        || this.cache === ArrayWidget
-    );
-    if (!uiSchema['ui:toggleable'] && !hasTitle) {
-      return '';
-    }
-    let title = getTitle(uiSchema['ui:title'] || FIELD_TITLE, params);
-    if (required[toPath(name, '[]')]) {
-      title += '*';
-    }
-    return title;
+
+    const { ErrorWidget } = widgets;
+    const leftRow = uiSchema['ui:leftRow'] ? styles.leftRow : {};
+    const rightRow = uiSchema['ui:rightRow'] ? styles.rightRow : {};
+    const fullRow = schema.format === 'date-time' ? styles.fullRow : {};
+
+    return errors.filter(isString).map((error, i) => (
+      <ErrorWidget
+        uiSchema={uiSchema}
+        key={error}
+        first={i === 0}
+        last={i === errors.length - 1}
+        auto={uiSchema['ui:inline']}
+        style={{ ...leftRow, ...rightRow, ...fullRow }}
+        {...(uiSchema['ui:errorProps'] || {})}
+      >
+        {error}
+      </ErrorWidget>
+    ));
   }
-
-  onFocus = () => {
-    const { onFocus } = this.props;
-    if (onFocus) {
-      onFocus();
-    }
-    this.setState(() => ({ inFocus: true }));
-  };
-
-  onBlur = () => {
-    this.setState(() => ({ inFocus: false }));
-  };
 
   render() {
     const {
-      id,
       name,
       meta,
       schema,

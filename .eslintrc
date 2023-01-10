@@ -63,6 +63,7 @@
     "react/state-in-constructor": 0,
     "prefer-object-spread": 0,
     "no-mixed-operators": ["error", { "allowSamePrecedence": true }],
-    "react/jsx-curly-brace-presence": 0
+    "react/jsx-curly-brace-presence": 0,
+    "no-unused-expressions": ["error", {"allowShortCircuit": true}]
   }
 }

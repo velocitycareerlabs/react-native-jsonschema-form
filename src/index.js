@@ -34,7 +34,7 @@ import FormEvent from './FormEvent';
 import DefaultCancelButton from './CancelButton';
 import DefaultSubmitButton from './SubmitButton';
 
-export { UIProvider } from './UIProvider';
+export { default as UIProvider } from './UIProvider';
 
 export {
   FIELD_KEY,
@@ -49,22 +49,6 @@ const emptySchema = {
   type: 'object',
   properties: [],
 };
-
-const styles = StyleSheet.create({
-  form: { zIndex: 1 },
-  buttonContainer: {
-    paddingTop: 5,
-  },
-  buttonContainerCenter: {
-    justifyContent: 'center',
-  },
-  buttonContainerLeft: {
-    justifyContent: 'flex-start',
-  },
-  buttonContainerRight: {
-    justifyContent: 'flex-end',
-  },
-});
 
 const formStyles = StyleSheet.create({
   form: {
@@ -106,18 +90,6 @@ const formStyles = StyleSheet.create({
 
 const defaultReject = (err) => { throw err; };
 
-const getButtonPosition = (position) => {
-  const style = [styles.buttonContainer];
-  if (position === 'center') {
-    style.push(styles.buttonContainerCenter);
-  } else if (position === 'left') {
-    style.push(styles.buttonContainerLeft);
-  } else {
-    style.push(styles.buttonContainerRight);
-  }
-  return style;
-};
-
 const addToObject = obj => (v, k) => Object.assign(obj, { [k]: v });
 
 const addToArray = arr => v => arr.push(v);
@@ -149,6 +121,7 @@ class JsonSchemaForm extends React.Component {
     insideClickRegex: PropTypes.instanceOf(RegExp),
     customSubmitButton: PropTypes.node,
     formStyles: ViewPropTypes.style,
+    customFormStyles: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -177,6 +150,7 @@ class JsonSchemaForm extends React.Component {
     insideClickRegex: undefined,
     customSubmitButton: null,
     formStyles: {},
+    customFormStyles: {},
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -567,12 +541,13 @@ class JsonSchemaForm extends React.Component {
       submitButton,
       SubmitButton,
       customSubmitButton,
+      customFormStyles,
     } = this.props;
 
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <View style={[formStyles.form, this.props.formStyles]}>
+        <View style={[formStyles.form, customFormStyles]}>
           <ObjectField
             {...this.props}
             name=""

@@ -90,6 +90,15 @@ const SelectWidget = (props) => {
   }
   const labels = uiSchema['ui:enumNames'] || schema.enumNames || values;
 
+  const onPickerConfirm = (val) => {
+    onChange(val[0]);
+    onBlur && onBlur();
+  };
+
+  const onPickerSelect = (val) => {
+    onChange(val[0]);
+  };
+
   const onTogglePicker = () => {
     Picker.isPickerShow((status) => {
       if (status) {
@@ -112,15 +121,6 @@ const SelectWidget = (props) => {
         onChange(value || labels[0]);
       }
     });
-  };
-
-  const onPickerConfirm = (val) => {
-    onChange(val[0]);
-    onBlur && onBlur();
-  };
-
-  const onPickerSelect = (val) => {
-    onChange(val[0]);
   };
 
   const onSelect = (index) => {
@@ -173,7 +173,9 @@ const SelectWidget = (props) => {
         onSelect={onSelect}
         renderSeparator={() => <View />}
       >
-        <View style={[styles.picker, theme.input.regular.border, hasError ? theme.input.error.border : {}, style]}>
+        <View style={[styles.picker,
+          theme.input.regular.border, hasError ? theme.input.error.border : {}, style]}
+        >
           {placeholder
             ? (
               <Text style={[theme.input.regular.text, placeholderStyle]}>
