@@ -1,10 +1,7 @@
-import React from 'react';
 import AbstractField from './AbstractField';
 
 class AbstractEnumerableField extends AbstractField {
-  getWidget() {
-    return null;
-  }
+  getWidget = () => null
 }
 
 export default AbstractEnumerableField;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import {
@@ -65,7 +65,7 @@ const parseDateOnlyStringToLocalDate = (dateOnlyStrings) => {
 
   const [year, month, day] = dateOnlyStrings.split('-');
   return new Date(+year, +month - 1, +day, 0, 0, 0);
-}
+};
 
 const DateWidget = (props) => {
   const {
@@ -89,21 +89,30 @@ const DateWidget = (props) => {
   const prevActiveField = usePrevious(activeField);
   const localDateValue = parseDateOnlyStringToLocalDate(value);
 
-  const hidePicker = () => {
-    const currentDate = localDateValue || ( date && new Date(date) );
+  const hidePicker = useCallback(() => {
+    const currentDate = localDateValue || (date && new Date(date));
     const dateToSave = currentDate && moment(currentDate).format(DATE_FORMAT);
     onWrappedChange(dateToSave);
     if (onBlur) {
       onBlur();
     }
-  };
+  }, [date, localDateValue, onBlur, onWrappedChange]);
 
   useEffect(() => {
     if (activeField !== name && prevActiveField === name) {
       setShow(false);
       hidePicker();
     }
-  }, [activeField, prevActiveField, name]);
+  }, [activeField, prevActiveField, name, hidePicker]);
+
+  const onCancel = () => {
+    setShow(false);
+    setDate('');
+    onWrappedChange('');
+    if (onBlur) {
+      onBlur();
+    }
+  };
 
   const onChange = (event, selectedDate) => {
     if (Platform.OS !== 'ios') {
@@ -147,19 +156,11 @@ const DateWidget = (props) => {
     }
   };
 
-  const onCancel = () => {
-    setShow(false);
-    setDate('');
-    onWrappedChange('');
-    if (onBlur) {
-      onBlur();
-    }
-  };
-  const pickerValue =  localDateValue || ( date && new Date(date) );
+  const pickerValue = localDateValue || (date && new Date(date));
 
   const formattedValue = pickerValue
-      ? moment(pickerValue).format(uiSchema['ui:dateFormat'] || 'DD MMM YYYY')
-      : '';
+    ? moment(pickerValue).format(uiSchema['ui:dateFormat'] || 'DD MMM YYYY')
+    : '';
 
   const placeholderStyle = theme.input[hasError ? 'error' : 'regular'].placeholder;
   const textStyle = inFocus ? get(theme, 'Datepicker.focused', {}) : {};
@@ -230,7 +231,6 @@ const DateWidget = (props) => {
 DateWidget.propTypes = {
   theme: PropTypes.shape().isRequired,
   uiSchema: PropTypes.shape().isRequired,
-  onChange: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   hasError: PropTypes.bool,

@@ -36,15 +36,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const useOnPress = ({
-  name,
-  meta,
-  value,
-  onChange,
-}) => checked => onChange(value, name, {
-  nextMeta: { ...meta, 'ui:disabled': !!checked },
-});
-
 const LabelWidget = (preProps) => {
   const props = useTheme('LabelWidget', preProps);
 
@@ -91,7 +82,6 @@ LabelWidget.propTypes = {
   themeTextStyle: PropTypes.shape().isRequired,
   hasError: PropTypes.bool.isRequired,
   hasTitle: PropTypes.bool.isRequired,
-  toggleable: PropTypes.bool.isRequired,
   children: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
   style: ViewPropTypes.style,
   label: PropTypes.bool,

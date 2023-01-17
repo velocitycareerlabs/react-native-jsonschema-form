@@ -98,8 +98,7 @@ const createProperty = (property, gridItem, index, params) => {
     propertyContainerProps = {};
   }
   const onFocus = () => {
-    const { onFocus } = params;
-    if (onFocus) {
+    if (params.onFocus) {
       onFocus(propertyName);
     }
   };
@@ -111,7 +110,7 @@ const createProperty = (property, gridItem, index, params) => {
     value,
     meta,
     errors,
-    uiSchema,
+    propertyUiSchema,
     ...props
   }) => (
     <View style={[
@@ -129,7 +128,7 @@ const createProperty = (property, gridItem, index, params) => {
           name={propertyName}
           onFocus={onFocus}
           schema={propertySchema}
-          uiSchema={uiSchema[property]}
+          uiSchema={propertyUiSchema[property]}
           gridItemType={gridItem.type}
           gridItemIndex={index}
           gridItemLength={gridItem.children.length}

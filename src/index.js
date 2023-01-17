@@ -34,7 +34,7 @@ import FormEvent from './FormEvent';
 import DefaultCancelButton from './CancelButton';
 import DefaultSubmitButton from './SubmitButton';
 
-export { UIProvider } from './UIProvider';
+export { default as UIProvider } from './UIProvider';
 
 export {
   FIELD_KEY,
@@ -50,35 +50,45 @@ const emptySchema = {
   properties: [],
 };
 
-const styles = StyleSheet.create({
-  form: { zIndex: 1 },
-  buttonContainer: {
-    paddingTop: 5,
+const formStyles = StyleSheet.create({
+  form: {
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: 'white',
+    borderRadius: 14,
+    shadowColor: '#FF2D55',
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    marginBottom: 25,
+    ...Platform.select({
+      android: {
+        borderRadius: 4,
+        elevation: 3,
+      },
+    }),
   },
-  buttonContainerCenter: {
+  error: {
+    color: '#FF2D55',
+  },
+  buttonsBlock: {
+    flexDirection: 'row',
     justifyContent: 'center',
+    marginBottom: 25,
+    marginTop: 25,
   },
-  buttonContainerLeft: {
-    justifyContent: 'flex-start',
+  buttonLeft: {
+    marginRight: 5,
   },
-  buttonContainerRight: {
-    justifyContent: 'flex-end',
+  buttonRight: {
+    marginLeft: 5,
   },
 });
 
 const defaultReject = (err) => { throw err; };
-
-const getButtonPosition = (position) => {
-  const style = [styles.buttonContainer];
-  if (position === 'center') {
-    style.push(styles.buttonContainerCenter);
-  } else if (position === 'left') {
-    style.push(styles.buttonContainerLeft);
-  } else {
-    style.push(styles.buttonContainerRight);
-  }
-  return style;
-};
 
 const addToObject = obj => (v, k) => Object.assign(obj, { [k]: v });
 
@@ -111,6 +121,7 @@ class JsonSchemaForm extends React.Component {
     insideClickRegex: PropTypes.instanceOf(RegExp),
     customSubmitButton: PropTypes.node,
     formStyles: ViewPropTypes.style,
+    customFormStyles: ViewPropTypes.style,
   };
 
   static defaultProps = {
@@ -139,6 +150,7 @@ class JsonSchemaForm extends React.Component {
     insideClickRegex: undefined,
     customSubmitButton: null,
     formStyles: {},
+    customFormStyles: {},
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
@@ -458,6 +470,10 @@ class JsonSchemaForm extends React.Component {
     return resolve.call(self, maybePromise);
   };
 
+  setField = (name) => {
+    this.setState(() => ({ activeField: name }));
+  };
+
   filterEmpty(values, path = '', type = 'object') {
     const self = this;
     const { required } = self.state;
@@ -503,10 +519,6 @@ class JsonSchemaForm extends React.Component {
     return filteredValues;
   }
 
-  setField = (name) => {
-    this.setState(() => ({ activeField: name }));
-  };
-
   render() {
     const {
       event,
@@ -529,12 +541,13 @@ class JsonSchemaForm extends React.Component {
       submitButton,
       SubmitButton,
       customSubmitButton,
+      customFormStyles,
     } = this.props;
 
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <View style={[formStyles.form, this.props.formStyles]}>
+        <View style={[formStyles.form, customFormStyles]}>
           <ObjectField
             {...this.props}
             name=""
@@ -587,41 +600,3 @@ class JsonSchemaForm extends React.Component {
 }
 
 export const Form = withTheme('JsonSchemaForm')(JsonSchemaForm);
-
-const formStyles = StyleSheet.create({
-  form: {
-    paddingTop: 20,
-    paddingBottom: 10,
-    backgroundColor: 'white',
-    borderRadius: 14,
-    shadowColor: '#FF2D55',
-    shadowOpacity: 0.14,
-    shadowRadius: 8,
-    shadowOffset: {
-      height: 0,
-      width: 0,
-    },
-    marginBottom: 25,
-    ...Platform.select({
-      android: {
-        borderRadius: 4,
-        elevation: 3,
-      },
-    }),
-  },
-  error: {
-    color: '#FF2D55',
-  },
-  buttonsBlock:{
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginBottom: 25,
-    marginTop: 25
-  },
-  buttonLeft:{
-    marginRight: 5
-  },
-  buttonRight:{
-    marginLeft: 5
-  }
-});

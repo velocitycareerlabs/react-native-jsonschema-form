@@ -176,7 +176,8 @@ const useReorder = ({ review, setState }) => () => setState({
 });
 
 const onChangeText = (props, val, index) => {
-  const nextValue = isEmpty(props.value) ? [val] : map(props.value, (item, key) => (index === key ? val : item));
+  const nextValue = isEmpty(props.value)
+    ? [val] : map(props.value, (item, key) => (index === key ? val : item));
   props.onChange(nextValue, props.activeField);
 };
 
@@ -200,7 +201,6 @@ const ArrayWidget = (props) => {
     name,
     value,
     title,
-    widgets,
     schema,
     uiSchema,
     errors,
@@ -212,6 +212,32 @@ const ArrayWidget = (props) => {
   const hasError = isArray(errors) && errors.length > 0 && !errors.hidden;
   const hasTitle = uiSchema['ui:title'] !== false;
   const toggleable = !!uiSchema['ui:toggleable'];
+
+  const styles = StyleSheet.create({
+    labelContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    inputTextContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      width: '100%',
+      height: 60,
+      paddingVertical: 8,
+    },
+    icon: {
+      height: 20,
+      width: 20,
+      borderRadius: 10,
+      fontWeight: '400',
+      justifyContent: 'center',
+      alignItems: 'center',
+      ...Platform.select({ ios: { backgroundColor: '#000000' }, android: { backgroundColor: '#7489A8' } }),
+    },
+  });
 
   const addComponent = (
     <TouchableOpacity style={styles.icon} activeOpacity={1} onPress={onAdd}>
@@ -270,31 +296,5 @@ const ArrayWidget = (props) => {
     </React.Fragment>
   );
 };
-
-const styles = StyleSheet.create({
-  labelContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  inputTextContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    height: 60,
-    paddingVertical: 8,
-  },
-  icon: {
-    height: 20,
-    width: 20,
-    borderRadius: 10,
-    fontWeight: '400',
-    justifyContent: 'center',
-    alignItems: 'center',
-    ...Platform.select({ ios: { backgroundColor: '#000000' }, android: { backgroundColor: '#7489A8' } }),
-  },
-});
 
 export default ArrayWidget;
