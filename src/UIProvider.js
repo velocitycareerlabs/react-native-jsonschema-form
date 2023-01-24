@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider as ThemeProvider } from './Theme';
 
-const UIProvider = ({ theme, children }) => (
+// eslint-disable-next-line import/prefer-default-export
+export const UIProvider = ({ theme, children }) => (
   <ThemeProvider value={theme}>
     {children}
   </ThemeProvider>
@@ -18,4 +19,3 @@ UIProvider.defaultProps = {
   children: null,
 };
 
-export default UIProvider;
