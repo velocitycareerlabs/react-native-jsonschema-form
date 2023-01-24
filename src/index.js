@@ -88,6 +88,44 @@ const formStyles = StyleSheet.create({
   },
 });
 
+const formStyles = StyleSheet.create({
+  form: {
+    paddingTop: 20,
+    paddingBottom: 10,
+    backgroundColor: 'white',
+    borderRadius: 14,
+    shadowColor: '#FF2D55',
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: {
+      height: 0,
+      width: 0,
+    },
+    marginBottom: 25,
+    ...Platform.select({
+      android: {
+        borderRadius: 4,
+        elevation: 3,
+      },
+    }),
+  },
+  error: {
+    color: '#FF2D55',
+  },
+  buttonsBlock: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 25,
+    marginTop: 25,
+  },
+  buttonLeft: {
+    marginRight: 5,
+  },
+  buttonRight: {
+    marginLeft: 5,
+  },
+});
+
 const defaultReject = (err) => { throw err; };
 
 const addToObject = obj => (v, k) => Object.assign(obj, { [k]: v });
