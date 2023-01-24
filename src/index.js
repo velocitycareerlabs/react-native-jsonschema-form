@@ -34,7 +34,7 @@ import FormEvent from './FormEvent';
 import DefaultCancelButton from './CancelButton';
 import DefaultSubmitButton from './SubmitButton';
 
-export { default as UIProvider } from './UIProvider';
+export { UIProvider } from './UIProvider';
 
 export {
   FIELD_KEY,
@@ -120,7 +120,6 @@ class JsonSchemaForm extends React.Component {
     filterEmptyValues: PropTypes.bool,
     insideClickRegex: PropTypes.instanceOf(RegExp),
     customSubmitButton: PropTypes.node,
-    formStyles: ViewPropTypes.style,
     customFormStyles: ViewPropTypes.style,
   };
 
@@ -149,7 +148,6 @@ class JsonSchemaForm extends React.Component {
     filterEmptyValues: false,
     insideClickRegex: undefined,
     customSubmitButton: null,
-    formStyles: {},
     customFormStyles: {},
   };
 
