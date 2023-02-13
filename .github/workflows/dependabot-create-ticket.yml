@@ -1,20 +1,104 @@
 name: Dependabot Alert to Jira Ticket
 on:
-  workflow_dispatch:
-    inputs:
-      pr_label:
-        description: Label of PR
-        type: string
-        required: true
   pull_request:
     types:
       - labeled
+      - closed
 
+permissions:
+  pull-requests: write
+  contents: write
+  repository-projects: read
+
+env: 
+  PR_URL: ${{ github.event.pull_request.html_url }} 
+  PR_LABEL: ${{ github.event.label.name }}
+  TICKET_PRIORITY: 'High'
+  TICKET_LABELS: '"dependabot"'
 jobs:
   create-ticket:
     # Create Ticket
     name: Create Ticket
-    uses: velocitycareerlabs/monorepo/.github/workflows/dependabot-create-ticket.yml@dev
-    with:
-      pr_label: github.event.label.name
-    secrets: inherit
+    if: github.event.action == 'labeled' && github.event.label.name == 'dependencies'
+    runs-on: ubuntu-latest
+    steps:
+      # Jira Login
+      - name: Jira Login
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.OPS_JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.OPS_JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.OPS_JIRA_API_TOKEN }}
+      # Fetch Dependabot Metadata
+      - name: Fetch Dependabot Metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v1
+        with:
+          alert-lookup: true
+          compat-lookup: true
+          github-token: "${{ secrets.VNF_GITHUB_TOKEN }}"
+      # Read PR Info
+      - name: Read PR Info
+        run: |
+          echo "PR_TITLE=$(gh pr view --json title --jq .title ${{ env.PR_URL }})" >> $GITHUB_ENV
+          echo "PR_URL=$(gh pr view --json url --jq .url ${{ env.PR_URL }})" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Set Frontend Assignee
+      - name: Set Frontend Assignee
+        run: echo "JIRA_ASSIGNEE=${{ secrets.JIRA_FRONTEND_ASSIGNEE_ID }}" >> $GITHUB_ENV
+        if: steps.dependabot-metadata.outputs.package-ecosystem == 'npm_and_yarn'
+      # Set Security Ticket Values
+      - name: Set Security Ticket Priority
+        run: |
+          echo "TICKET_PRIORITY=Critical" >> $GITHUB_ENV
+          echo "TICKET_LABELS=\"dependabot\", \"Security\"" >> $GITHUB_ENV
+        if: steps.dependabot-metadata.outputs.alert-state
+      # Create Ticket
+      - name: Create Ticket
+        id: create_ticket
+        uses: atlassian/gajira-create@v3
+        with:
+          project: VL
+          issuetype: Story
+          summary: ${{ env.PR_TITLE }}
+          description: "Automatically created for Dependabot PR ${{ env.PR_URL }}"
+          fields: '{ "priority": { "name": "${{ env.TICKET_PRIORITY }}" }, "assignee": { "id": "${{ env.JIRA_ASSIGNEE }}" }, "labels": [ ${{ env.TICKET_LABELS }} ] }'
+      # Update PR Title
+      - name: Update PR Title
+        run: gh pr edit ${{ env.PR_URL }} --title "${{ env.PR_TITLE }} (${{ steps.create_ticket.outputs.issue }})"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # Change Base to Staging
+      - name: Change Base to Staging
+        run: gh pr edit ${{ env.PR_URL }} --base staging
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.dependabot-metadata.outputs.alert-state
+  
+  close-ticket:
+    # Close Ticket
+    name: Close Ticket
+    if: github.event.action == 'closed' && github.actor == 'dependabot[bot]' && github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+      # Jira Login
+      - name: Jira Login
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.OPS_JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.OPS_JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.OPS_JIRA_API_TOKEN }}
+      # Read PR Title
+      - name: Read PR Info
+        run: echo "PR_TITLE=$(gh pr view --json title --jq .title ${{ env.PR_URL }})" >> $GITHUB_ENV
+      # Extract Ticket Number
+      - name: Extract Ticket Number
+        run: echo "TICKET_NUMBER=$(echo $PR_TITLE | grep -o 'VL-[0-9][0-9][0-9][0-9]')" >> $GITHUB_ENV
+      # Close Ticket
+      - name: Close Ticket
+        id: transition
+        uses: atlassian/gajira-transition@v3
+        with:
+          issue: ${{ env.TICKET_NUMBER }}
+          transition: "Closed"
