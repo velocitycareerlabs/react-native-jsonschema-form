@@ -50,7 +50,7 @@ const emptySchema = {
   properties: [],
 };
 
-const formStyles = StyleSheet.create({
+const formStyle = StyleSheet.create({
   form: {
     paddingTop: 20,
     paddingBottom: 10,
@@ -545,7 +545,7 @@ class JsonSchemaForm extends React.Component {
     const { ObjectField } = fields;
     return (
       <React.Fragment>
-        <View style={[formStyles.form, customFormStyles]}>
+        <View style={[formStyle.form, customFormStyles]}>
           <ObjectField
             {...this.props}
             name=""
@@ -570,19 +570,19 @@ class JsonSchemaForm extends React.Component {
             activeField={activeField}
           />
         </View>
-        {!!isSubmitError && <Text style={formStyles.error}>Please fill all required fields.</Text>}
+        {!!isSubmitError && <Text style={formStyle.error}>Please fill all required fields.</Text>}
         {children || (submitButton === false && cancelButton === false) ? children : (
-          <View style={formStyles.buttonsBlock}>
+          <View style={formStyle.buttonsBlock}>
             {cancelButton ? (
               <CancelButton
                 onPress={this.onCancel}
-                style={formStyles.buttonLeft}
+                style={formStyle.buttonLeft}
                 text={isString(cancelButton) ? cancelButton : 'Cancel'}
               />
             ) : null}
             {submitButton && !customSubmitButton ? (
               <SubmitButton
-                style={formStyles.buttonRight}
+                style={formStyle.buttonRight}
                 onPress={this.onSubmit}
                 text={isString(submitButton) ? submitButton : 'Submit'}
               />
