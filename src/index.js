@@ -351,6 +351,15 @@ class JsonSchemaForm extends React.Component {
     });
   }
 
+  clearAll = () => {
+    const { schema, uiSchema } = this.props;
+
+    this.setState({
+      values: getValues({}, getStructure(schema, uiSchema).schema),
+      update: 'all',
+    });
+  }
+
   onCancel = () => {
     const { values } = this.state;
     const { onCancel } = this.props;
