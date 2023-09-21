@@ -53,7 +53,7 @@
     "react-native-picker": "github:beefe/react-native-picker#6fa89e921c93279e8c0ef6dc871bd13aeddad158",
     "react-native-raw-bottom-sheet": "^2.2.0",
     "underscore.string": "^3.3.5",
-    "@react-native-community/datetimepicker": "^2.5.0"
+    "@react-native-community/datetimepicker": "^7.6.0"
   },
   "browserslist": [
     ">0.2%",
