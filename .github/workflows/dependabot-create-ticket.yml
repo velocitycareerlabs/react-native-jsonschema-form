@@ -69,12 +69,6 @@ jobs:
         run: gh pr edit ${{ env.PR_URL }} --title "${{ env.PR_TITLE }} (${{ steps.create_ticket.outputs.issue }})"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # Change Base to Staging
-      - name: Change Base to Staging
-        run: gh pr edit ${{ env.PR_URL }} --base staging
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        if: steps.dependabot-metadata.outputs.alert-state
   
   close-ticket:
     # Close Ticket
@@ -92,9 +86,13 @@ jobs:
       # Read PR Title
       - name: Read PR Info
         run: echo "PR_TITLE=$(gh pr view --json title --jq .title ${{ env.PR_URL }})" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Extract Ticket Number
       - name: Extract Ticket Number
         run: echo "TICKET_NUMBER=$(echo $PR_TITLE | grep -o 'VL-[0-9][0-9][0-9][0-9]')" >> $GITHUB_ENV
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       # Close Ticket
       - name: Close Ticket
         id: transition
