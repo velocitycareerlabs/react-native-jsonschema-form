@@ -1,6 +1,6 @@
 {
   "name": "@velocitycareerlabs/react-native-jsonschema-web-form",
-  "version": "0.3.94",
+  "version": "0.3.95",
   "private": false,
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "@babel/plugin-proposal-class-properties": "7.10.4",
     "@babel/plugin-transform-react-jsx": "7.22.15",
     "@babel/register": "7.11.5",
-    "@svgr/cli": "^5.5.0",
+    "@svgr/cli": "^8.1.0",
     "babel-eslint": "10.1.0",
     "babel-plugin-lodash": "3.3.4",
     "cloc": "2.7.0",
@@ -38,7 +38,7 @@
     "eslint-config-airbnb": "18.2.0",
     "eslint-plugin-import": "2.22.0",
     "eslint-plugin-json": "2.1.2",
-    "eslint-plugin-jsx-a11y": "6.3.1",
+    "eslint-plugin-jsx-a11y": "6.7.1",
     "eslint-plugin-react": "7.20.6",
     "eslint-plugin-react-hooks": "4.0.8"
   },
