@@ -48,7 +48,7 @@
     "moment": "^2.29.4",
     "prop-types": "^15.6.2",
     "react-native-image-picker": "3.8.1",
-    "react-native-modal": "^11.5.6",
+    "react-native-modal": "^13.0.1",
     "react-native-modal-dropdown": "git+https://github.com/siemiatj/react-native-modal-dropdown.git#9ebaf21a51405dd240534703df8df3739f51237a",
     "react-native-picker": "github:beefe/react-native-picker#6fa89e921c93279e8c0ef6dc871bd13aeddad158",
     "react-native-raw-bottom-sheet": "^2.2.0",
