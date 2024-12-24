@@ -219,7 +219,6 @@ const FileWidget = (props) => {
       </TouchableOpacity>
       <RBSheet
         ref={refRBSheet}
-        closeOnDragDown={false}
         closeOnPressMask={false}
         height={124}
       >
