@@ -5,7 +5,7 @@ import {
   StyleSheet, Platform, Text, TouchableOpacity, View,
 } from 'react-native';
 import { ViewPropTypes } from 'deprecated-react-native-prop-types';
-import Picker from 'react-native-picker';
+import Picker from '@react-native-picker/picker';
 import {
   isArray, isNaN, noop, without,
 } from 'lodash';
