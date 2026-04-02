@@ -2628,10 +2628,10 @@ react-native-modal@^11.5.6:
     prop-types "^15.6.2"
     react-native-animatable "1.3.3"
 
-react-native-raw-bottom-sheet@^2.2.0:
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-2.2.1.tgz#20151ee421895b9b06614f3114841fdc55bd8070"
-  integrity sha512-9MkumyiXEmtSx01cTYOzauUXPRckLSQP1DrRc9zq7TMqtcKk0n67tMyzy8qsrgEPLs63+Kjr/eJc6PlaSgpZ5g==
+react-native-raw-bottom-sheet@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-raw-bottom-sheet/-/react-native-raw-bottom-sheet-3.0.0.tgz#8e7838ab9b8113bcccdc9648b41eb2bd54e86243"
+  integrity sha512-kHR7j2ExCLqf/AO3MECozMJXi48O1+YxUYSRgRo/5Ftm7mEcrxJEzvjqMmqUbVhhKlfk5hLCGFnEQ5Z9OHCUtg==
 
 readdirp@~3.6.0:
   version "3.6.0"
